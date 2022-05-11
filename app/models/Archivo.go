@@ -7,6 +7,7 @@ type Archivo struct {
 	Data             []byte    `gorm:"type:bytea"`
 	Visualizaciones  uint      `gorm:"default:0"`
 	FechaPublicacion time.Time `gorm:"default:now()"`
+	Mime             string    `gorm:"not null"`
 
 	ClaveClave         string `gorm:"type:char(32);foreignkey:ClaveClave"`
 	PropietarioArchivo string `gorm:"not null;type:varchar(50);"`

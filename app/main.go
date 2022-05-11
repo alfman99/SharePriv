@@ -43,11 +43,11 @@ func prod() {
 }
 
 func testing() {
-	test := util.EncriptarArchivo([]byte("hola"), []byte("passphrasewhichneedstobe32bytes!"))
+	test := util.EncriptarArchivo([]byte("♀♀µ┼"), []byte("passphrasewhichneedstobe32bytes!"))
 
 	fmt.Println(string(test))
 
-	fmt.Println(string(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!"))))
+	fmt.Println(util.ToBase64(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!"))))
 }
 
 func main() {
