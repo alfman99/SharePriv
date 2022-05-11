@@ -4,6 +4,8 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"mime/multipart"
+	"net/http"
 )
 
 func EncriptarArchivo(data []byte, key []byte) []byte {
@@ -39,4 +41,14 @@ func DesencriptarArchivo(data []byte, key []byte) []byte {
 		panic(err)
 	}
 	return plainData
+}
+
+func GetFileContentType(out multipart.File) (string, error) {
+	// Only the first 512 bytes are used to sniff the content type.
+	buffer := make([]byte, 512)
+	_, err := out.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+	return http.DetectContentType(buffer), nil
 }

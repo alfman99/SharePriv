@@ -51,5 +51,6 @@ func testing() {
 }
 
 func main() {
-	testing()
+	// testing()
+	prod()
 }
