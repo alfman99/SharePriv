@@ -9,11 +9,11 @@ import (
 )
 
 func SetUsuarioRoutes(app fiber.Router) {
-	// Get usuario by username
-	app.Get("/:username", getUser) // DONE!
-
 	// Create usuario
 	app.Post("/", createUser)
+
+	// Get usuario by username
+	app.Get("/:username", getUser) // DONE!
 }
 
 func createUser(c *fiber.Ctx) error {
@@ -24,7 +24,7 @@ func createUser(c *fiber.Ctx) error {
 		Invitacion string `json:"invitacion"`
 	}{}
 
-	if err := c.BodyParser(&payload); err != nil {
+	if err := c.BodyParser(&payload); err != nil || payload.Username == "" || payload.Password == "" || payload.Invitacion == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El body no tiene el formato correcto",
@@ -32,9 +32,8 @@ func createUser(c *fiber.Ctx) error {
 	}
 
 	var invitacion models.InvitacionRegistro
-	invitacion.Codigo = payload.Invitacion
 
-	if err := database.InstanciaDB.First(&invitacion).Error; err != nil {
+	if err := database.InstanciaDB.Where("codigo = ?", payload.Invitacion).First(&invitacion).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El codigo de invitacion no es valido",
@@ -83,6 +82,13 @@ func createUser(c *fiber.Ctx) error {
 
 func getUser(c *fiber.Ctx) error {
 	username := c.AllParams()["username"]
+
+	if username == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El username no puede estar vacio",
+		})
+	}
 
 	var usuario models.Usuario
 

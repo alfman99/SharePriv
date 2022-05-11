@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"sharepriv/database"
 	"sharepriv/middleware"
 	"sharepriv/routes"
+	"sharepriv/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -30,7 +32,7 @@ func setupRoutes(app *fiber.App) {
 
 }
 
-func main() {
+func prod() {
 	database.ConnectDB()
 
 	app := fiber.New()
@@ -38,5 +40,16 @@ func main() {
 	setupRoutes(app)
 
 	app.Listen(":3000")
+}
 
+func testing() {
+	test := util.EncriptarArchivo([]byte("hola"), []byte("passphrasewhichneedstobe32bytes!"))
+
+	fmt.Println(string(test))
+
+	fmt.Println(string(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!"))))
+}
+
+func main() {
+	testing()
 }
