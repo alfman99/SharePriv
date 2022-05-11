@@ -25,7 +25,6 @@ func ConnectDB() {
 
 	// Hacer migraciones
 	db.AutoMigrate(
-		&models.Clave{},
 		&models.Grupo{},
 		&models.InvitacionGrupo{},
 		&models.InvitacionRegistro{},

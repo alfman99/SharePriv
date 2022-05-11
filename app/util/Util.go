@@ -4,7 +4,6 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"encoding/base64"
 )
 
 func EncriptarArchivo(data []byte, key []byte) []byte {
@@ -40,8 +39,4 @@ func DesencriptarArchivo(data []byte, key []byte) []byte {
 		panic(err)
 	}
 	return plainData
-}
-
-func ToBase64(data []byte) string {
-	return base64.StdEncoding.EncodeToString(data)
 }

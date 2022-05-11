@@ -10,5 +10,4 @@ type Grupo struct {
 	Archivos            []ArchivoGrupo
 	InvitacionesGrupo   []InvitacionGrupo
 	PropietarioUsername string `gorm:"not null; type:varchar(50);"`
-	ClaveClave          string `gorm:"not null;"`
 }

@@ -9,7 +9,6 @@ type Archivo struct {
 	FechaPublicacion time.Time `gorm:"default:now()"`
 	Mime             string    `gorm:"not null"`
 
-	ClaveClave         string `gorm:"type:char(32);foreignkey:ClaveClave"`
 	PropietarioArchivo string `gorm:"not null;type:varchar(50);"`
 }
 

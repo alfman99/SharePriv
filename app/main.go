@@ -47,7 +47,7 @@ func testing() {
 
 	fmt.Println(string(test))
 
-	fmt.Println(util.ToBase64(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!"))))
+	fmt.Println(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!")))
 }
 
 func main() {

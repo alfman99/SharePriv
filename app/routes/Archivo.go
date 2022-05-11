@@ -116,13 +116,8 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 
 	encryptedFile := util.EncriptarArchivo(data, []byte(claveEncriptacion))
 
-	var clave models.Clave
-	clave.Clave = claveEncriptacion
-	database.InstanciaDB.Create(&clave)
-
 	var archivo models.ArchivoPublico
 	archivo.Data = encryptedFile
-	archivo.ClaveClave = claveEncriptacion
 	archivo.Mime = mimeType
 	archivo.PropietarioArchivo = "test" // Cambiar por el usuario que subio el archivo
 
