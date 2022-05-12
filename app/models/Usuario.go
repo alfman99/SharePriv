@@ -10,6 +10,9 @@ type Usuario struct {
 	FechaCreacion time.Time `gorm:"default:now()"`
 	Grupos        []Grupo   `gorm:"many2many:usuarios_grupos"`
 
+	InvitacionesRegistroCreadas []InvitacionRegistro `json:"-" gorm:"foreignkey:Propietario"`
+	InvitacionesGrupoCreadas    []InvitacionGrupo    `json:"-" gorm:"foreignkey:Propietario"`
+
 	PropietarioGrupos  []Grupo   `gorm:"foreignKey:PropietarioUsername"`
 	PropietarioArchivo []Archivo `gorm:"foreignkey:PropietarioArchivo"`
 

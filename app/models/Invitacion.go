@@ -8,6 +8,8 @@ type Invitacion struct {
 	FechaCaducidad time.Time
 	MaximoUsos     uint
 	Usos           uint `gorm:"default:0"`
+
+	Propietario string `gorm:"foreignkey:PropietarioID"`
 }
 
 type InvitacionGrupo struct {
@@ -19,5 +21,5 @@ type InvitacionGrupo struct {
 type InvitacionRegistro struct {
 	Invitacion
 
-	UsuariosInvitadosRegistro []Usuario
+	// UsuariosInvitadosRegistro []Usuario `json:"-"`
 }

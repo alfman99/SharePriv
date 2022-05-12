@@ -32,7 +32,7 @@ func setupRoutes(app *fiber.App) {
 	apiArchivos := api.Group("/archivos")
 	routes.SetArchivoRoutes(apiArchivos) // /api/archivos
 
-	// TODO
+	// TODO: Crear grupo / Coger info de grupo
 	apiGrupos := api.Group("/grupos")
 	routes.SetGroupRoutes(apiGrupos) // /api/grupos
 
@@ -53,11 +53,15 @@ func prod() {
 }
 
 func testing() {
-	test := util.EncriptarArchivo([]byte("♀♀µ┼"), []byte("passphrasewhichneedstobe32bytes!"))
+	/*test := util.EncriptarArchivo([]byte("♀♀µ┼"), []byte("passphrasewhichneedstobe32bytes!"))
 
 	fmt.Println(string(test))
 
-	fmt.Println(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!")))
+	fmt.Println(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!")))*/
+
+	fmt.Println(util.GenerateRandomString(16))
+	fmt.Println(util.GenerateRandomString(16))
+
 }
 
 func main() {

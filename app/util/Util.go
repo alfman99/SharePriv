@@ -3,8 +3,12 @@ package util
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
+	"math/rand"
+	"time"
 )
+
+var seededRand *rand.Rand = rand.New(
+	rand.NewSource(time.Now().UnixNano()))
 
 func EncriptarArchivo(data []byte, key []byte) []byte {
 	c, err := aes.NewCipher(key)
@@ -39,4 +43,13 @@ func DesencriptarArchivo(data []byte, key []byte) []byte {
 		panic(err)
 	}
 	return plainData
+}
+
+func GenerateRandomString(length int) string {
+	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, length)
+	for i := range b {
+		b[i] = letter[seededRand.Intn(len(letter))]
+	}
+	return string(b)
 }

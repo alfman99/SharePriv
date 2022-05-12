@@ -2,6 +2,7 @@ package routes
 
 import (
 	"sharepriv/database"
+	"sharepriv/middleware"
 	"sharepriv/models"
 	"time"
 
@@ -9,13 +10,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 )
-
-var jwtKey = []byte("fas8df8as3ll")
-
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
 
 func SetAuthRoutes(app fiber.Router) {
 	// Login user
@@ -53,16 +47,16 @@ func setLogin(c *fiber.Ctx) error {
 
 	expirationTime := time.Now().Add(time.Hour * 24 * 7)
 
-	claims := &Claims{
-		Username: payload.Username,
-		StandardClaims: jwt.StandardClaims{
+	claims := &jwt.MapClaims{
+		"user": payload.Username,
+		"StandardClaims": jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(middleware.JwtKey)
 
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
