@@ -41,7 +41,7 @@ func CheckAuth(c *fiber.Ctx) error {
 	}
 
 	if claims, ok := tkn.Claims.(jwt.MapClaims); ok && tkn.Valid {
-		c.Set("user", claims["user"].(string))
+		c.Locals("user", claims["user"].(string))
 	} else {
 		return c.Status(401).JSON(fiber.Map{
 			"status":  "error",

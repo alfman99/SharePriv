@@ -57,7 +57,7 @@ func createInvitacionRegistro(c *fiber.Ctx) error {
 	invitacion.Codigo = util.GenerateRandomString(16)
 	invitacion.FechaCaducidad = fechaVal
 	invitacion.MaximoUsos = uint(maximoUsos)
-	invitacion.Propietario = c.Get("user")
+	invitacion.Propietario = c.Locals("user").(string)
 
 	if err := database.InstanciaDB.Create(&invitacion).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{
