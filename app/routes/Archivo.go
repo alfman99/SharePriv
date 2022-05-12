@@ -25,7 +25,6 @@ func SetArchivoRoutes(app fiber.Router) {
 	app.Post("/publico/upload", middleware.CheckAuth, uploadArchivoPublico) // TODO
 }
 
-// TODO: Get archivo desencriptado
 func getArchivoPublico(c *fiber.Ctx) error {
 
 	identificador := c.Params("uuid")
