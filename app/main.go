@@ -16,12 +16,12 @@ func setupRoutes(app *fiber.App) {
 
 	apiInvitaciones := api.Group("/invitaciones", middleware.CheckAuth) // /api/invitaciones protected with middleware
 
-	// TODO: Crear Invitacion Registro
+	// ACABADO
 	apiInvitacionesRegistro := apiInvitaciones.Group("/registro")
 	routes.SetInvitacionRegistroRoutes(apiInvitacionesRegistro) // /api/invitaciones/registro
 
-	// TODO: Crear Invitacion Grupo
-	apiInvitacionesGrupos := apiInvitaciones.Group("/grupos")
+	// ACABADO
+	apiInvitacionesGrupos := apiInvitaciones.Group("/grupo")
 	routes.SetInvitacionGruposRoutes(apiInvitacionesGrupos) // /api/invitaciones/grupos
 
 	// ACABADO
