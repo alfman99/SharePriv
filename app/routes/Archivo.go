@@ -23,7 +23,7 @@ func SetArchivoRoutes(app fiber.Router) {
 	// Middleware de autenticacion ACTIVADO
 	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
+	app.Get("/grupo/upload", middleware.CheckAuth, uploadArchivoGrupo) // TODO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {
@@ -122,7 +122,6 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 
 }
 
-// TODO: Get archivo de un grupo desencriptado
 func getArchivoGrupo(c *fiber.Ctx) error {
 
 	identificador := c.Params("uuid")
@@ -180,4 +179,8 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 	c.Context().SetContentType(archivo.Mime)
 	return c.Status(200).Send(decryptedFile)
 
+}
+
+func uploadArchivoGrupo(c *fiber.Ctx) error {
+	return nil
 }
