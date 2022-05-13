@@ -15,14 +15,15 @@ import (
 func SetArchivoRoutes(app fiber.Router) {
 	// Archivo
 	// Archivo Publico
-	app.Get("/publico/:uuid", getArchivoPublico) // TODO
+	app.Get("/publico/:uuid/:clave", getArchivoPublico) // ACABADO
+	// Middleware de autenticacion ACTIVADO
+	app.Post("/publico/upload", middleware.CheckAuth, uploadArchivoPublico) // ACABADO
 
 	// Archivo Grupo
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/:uuid", middleware.CheckAuth, getArchivoGrupo) // TODO
-
+	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
 	// Middleware de autenticacion ACTIVADO
-	app.Post("/publico/upload", middleware.CheckAuth, uploadArchivoPublico) // TODO
+	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {
@@ -37,7 +38,7 @@ func getArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
-	claveEncriptacion := []byte(c.FormValue("clave"))
+	claveEncriptacion := c.Params("clave")
 
 	if len(claveEncriptacion) != 32 {
 		return c.Status(400).JSON(fiber.Map{
@@ -56,16 +57,11 @@ func getArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
-	decryptedFile := util.DesencriptarArchivo(archivo.Data, claveEncriptacion)
+	decryptedFile := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
 
 	c.Context().SetContentType(archivo.Mime)
 	return c.Status(200).Send(decryptedFile)
 
-}
-
-// TODO: Get archivo de un grupo desencriptado
-func getArchivoGrupo(c *fiber.Ctx) error {
-	return nil
 }
 
 func uploadArchivoPublico(c *fiber.Ctx) error {
@@ -118,10 +114,70 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 	var archivo models.ArchivoPublico
 	archivo.Data = encryptedFile
 	archivo.Mime = mimeType
-	archivo.PropietarioArchivo = "test" // Cambiar por el usuario que subio el archivo
+	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
 
 	database.InstanciaDB.Create(&archivo)
 
 	return c.JSON(&archivo.Uuid)
+
+}
+
+// TODO: Get archivo de un grupo desencriptado
+func getArchivoGrupo(c *fiber.Ctx) error {
+
+	identificador := c.Params("uuid")
+	_, err := uuid.Parse(identificador)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El identificador no es un UUID",
+		})
+	}
+
+	claveEncriptacion := c.Params("clave")
+
+	if len(claveEncriptacion) != 32 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "La clave de encriptacion debe ser de 32 bytes",
+		})
+	}
+
+	var archivo models.ArchivoGrupo
+	if err := database.InstanciaDB.Where("uuid = ?", identificador).First(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El archivo no existe",
+		})
+	}
+
+	var usuario models.Usuario
+	if err := database.InstanciaDB.Where("username = ?", c.Locals("username").(string)).First(&usuario); err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Wtf??",
+		})
+	}
+
+	grupoEncontrado := false
+
+	for _, grupo := range usuario.Grupos {
+		if grupo.Uuid == archivo.GrupoUuid {
+			grupoEncontrado = true
+		}
+	}
+
+	if !grupoEncontrado {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no pertenece al grupo",
+		})
+	}
+
+	decryptedFile := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
+
+	c.Context().SetContentType(archivo.Mime)
+	return c.Status(200).Send(decryptedFile)
 
 }
