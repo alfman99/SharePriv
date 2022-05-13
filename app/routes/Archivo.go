@@ -21,9 +21,9 @@ func SetArchivoRoutes(app fiber.Router) {
 
 	// Archivo Grupo
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
+	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // ACABADO
 	// Middleware de autenticacion ACTIVADO
-	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // TODO
+	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // ACABADO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {

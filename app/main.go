@@ -28,11 +28,11 @@ func setupRoutes(app *fiber.App) {
 	apiUsuarios := api.Group("/usuarios")
 	routes.SetUsuarioRoutes(apiUsuarios) // /api/usuarios
 
-	// TODO: La parte de los archivos de grupo
+	// ACABADO
 	apiArchivos := api.Group("/archivos")
 	routes.SetArchivoRoutes(apiArchivos) // /api/archivos
 
-	// TODO: Crear grupo / Coger info de grupo
+	// ACABADO
 	apiGrupos := api.Group("/grupos")
 	routes.SetGroupRoutes(apiGrupos) // /api/grupos
 
