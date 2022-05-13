@@ -1,4 +1,4 @@
-package models
+package entities
 
 import (
 	"time"
@@ -17,4 +17,8 @@ type Usuario struct {
 	PropietarioArchivo []Archivo `gorm:"foreignkey:PropietarioArchivo"`
 
 	InvitacionRegistroCodigo string `json:"-" gorm:"not null; type:varchar(50);"`
+}
+
+func (u *Usuario) TableName() string {
+	return "usuario"
 }

@@ -1,4 +1,4 @@
-package models
+package entities
 
 import "time"
 
@@ -22,4 +22,12 @@ type ArchivoPublico struct {
 	Archivo
 
 	Password string `gorm:"type:varchar(50)"`
+}
+
+func (u *ArchivoGrupo) TableName() string {
+	return "archivo_grupo"
+}
+
+func (u *ArchivoPublico) TableName() string {
+	return "archivo_publico"
 }

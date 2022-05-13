@@ -1,6 +1,8 @@
-package models
+package entities
 
-import "time"
+import (
+	"time"
+)
 
 type Invitacion struct {
 	Codigo         string    `gorm:"primary_key; type:varchar(50);"`
@@ -22,4 +24,12 @@ type InvitacionRegistro struct {
 	Invitacion
 
 	// UsuariosInvitadosRegistro []Usuario `json:"-"`
+}
+
+func (u *InvitacionGrupo) TableName() string {
+	return "invitacion_grupo"
+}
+
+func (u *InvitacionRegistro) TableName() string {
+	return "invitacion_registro"
 }

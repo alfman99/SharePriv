@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"sharepriv/database"
+	"sharepriv/entities"
 	"sharepriv/middleware"
-	"sharepriv/models"
 	"sharepriv/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +23,7 @@ func SetArchivoRoutes(app fiber.Router) {
 	// Middleware de autenticacion ACTIVADO
 	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // TODO
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/upload", middleware.CheckAuth, uploadArchivoGrupo) // TODO
+	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // TODO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {
@@ -47,7 +47,7 @@ func getArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
-	var archivo models.ArchivoPublico
+	var archivo entities.ArchivoPublico
 	database.InstanciaDB.Where("uuid = ?", identificador).First(&archivo)
 
 	if archivo.Uuid == "" {
@@ -57,7 +57,14 @@ func getArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
-	decryptedFile := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
+	decryptedFile, err := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo desencriptar el archivo, la clave es incorrecta",
+		})
+	}
 
 	c.Context().SetContentType(archivo.Mime)
 	return c.Status(200).Send(decryptedFile)
@@ -111,12 +118,17 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 
 	encryptedFile := util.EncriptarArchivo(data, []byte(claveEncriptacion))
 
-	var archivo models.ArchivoPublico
+	var archivo entities.ArchivoPublico
 	archivo.Data = encryptedFile
 	archivo.Mime = mimeType
 	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
 
-	database.InstanciaDB.Create(&archivo)
+	if err = database.InstanciaDB.Create(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo crear el archivo",
+		})
+	}
 
 	return c.JSON(&archivo.Uuid)
 
@@ -125,12 +137,13 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 func getArchivoGrupo(c *fiber.Ctx) error {
 
 	identificador := c.Params("uuid")
+
 	_, err := uuid.Parse(identificador)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El identificador no es un UUID",
+			"message": "El identificador del archivo no es un UUID",
 		})
 	}
 
@@ -143,7 +156,7 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	var archivo models.ArchivoGrupo
+	var archivo entities.ArchivoGrupo
 	if err := database.InstanciaDB.Where("uuid = ?", identificador).First(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
@@ -151,36 +164,104 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	var usuario models.Usuario
-	if err := database.InstanciaDB.Where("username = ?", c.Locals("username").(string)).First(&usuario); err != nil {
+	var grupo entities.Grupo
+	if err := database.InstanciaDB.Preload("Usuarios").Where("uuid = ?", archivo.GrupoUuid).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "Wtf??",
+			"message": "El grupo del archivo no existe",
 		})
 	}
 
-	grupoEncontrado := false
+	encontrado := false
 
-	for _, grupo := range usuario.Grupos {
-		if grupo.Uuid == archivo.GrupoUuid {
-			grupoEncontrado = true
+	for _, usuario := range grupo.Usuarios {
+		if usuario.Username == c.Locals("user").(string) {
+			encontrado = true
+			break
 		}
 	}
 
-	if !grupoEncontrado {
+	if !encontrado {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El usuario no pertenece al grupo",
 		})
 	}
 
-	decryptedFile := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
+	decryptedFile, err := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo desencriptar el archivo, la clave es incorrecta",
+		})
+	}
 
 	c.Context().SetContentType(archivo.Mime)
+
 	return c.Status(200).Send(decryptedFile)
 
 }
 
 func uploadArchivoGrupo(c *fiber.Ctx) error {
-	return nil
+
+	file, err := c.FormFile("file")
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No hay archivo en el body",
+		})
+	}
+
+	claveEncriptacion := c.FormValue("clave")
+
+	if len(claveEncriptacion) != 32 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "La clave de encriptacion debe ser de 32 bytes",
+		})
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo abrir el archivo",
+		})
+	}
+	defer f.Close()
+
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo leer el archivo",
+		})
+	}
+	mimeType := http.DetectContentType(data)
+
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo extraer los bytes del archivo",
+		})
+	}
+
+	encryptedFile := util.EncriptarArchivo(data, []byte(claveEncriptacion))
+
+	var archivo entities.ArchivoGrupo
+	archivo.Data = encryptedFile
+	archivo.Mime = mimeType
+	archivo.GrupoUuid = c.FormValue("grupo")
+	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
+
+	if err = database.InstanciaDB.Create(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo crear el archivo",
+		})
+	}
+
+	return c.JSON(&archivo.Uuid)
 }

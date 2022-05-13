@@ -2,8 +2,8 @@ package routes
 
 import (
 	"sharepriv/database"
+	"sharepriv/entities"
 	"sharepriv/middleware"
-	"sharepriv/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -30,7 +30,7 @@ func setLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	var user models.Usuario
+	var user entities.Usuario
 	if err := database.InstanciaDB.Where("username = ?", payload.Username).First(&user).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",

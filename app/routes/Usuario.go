@@ -2,7 +2,7 @@ package routes
 
 import (
 	"sharepriv/database"
-	"sharepriv/models"
+	"sharepriv/entities"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,7 +31,7 @@ func createUser(c *fiber.Ctx) error {
 		})
 	}
 
-	var invitacion models.InvitacionRegistro
+	var invitacion entities.InvitacionRegistro
 
 	if err := database.InstanciaDB.Where("codigo = ?", payload.Invitacion).First(&invitacion).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -54,7 +54,7 @@ func createUser(c *fiber.Ctx) error {
 		})
 	}
 
-	var usuario models.Usuario
+	var usuario entities.Usuario
 
 	usuario.Username = payload.Username
 	usuario.Password = payload.Password
@@ -90,7 +90,7 @@ func getUser(c *fiber.Ctx) error {
 		})
 	}
 
-	var usuario models.Usuario
+	var usuario entities.Usuario
 
 	if err := database.InstanciaDB.Where("username = ?", username).First(&usuario).Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{

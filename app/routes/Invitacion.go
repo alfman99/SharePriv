@@ -2,7 +2,7 @@ package routes
 
 import (
 	"sharepriv/database"
-	"sharepriv/models"
+	"sharepriv/entities"
 	"sharepriv/util"
 	"strconv"
 	"time"
@@ -53,7 +53,7 @@ func createInvitacionRegistro(c *fiber.Ctx) error {
 		})
 	}
 
-	var invitacion models.InvitacionRegistro
+	var invitacion entities.InvitacionRegistro
 
 	invitacion.Codigo = util.GenerateRandomString(16)
 	invitacion.FechaCaducidad = fechaVal
@@ -116,7 +116,7 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 	}
 
 	// Check if group exists
-	var grupo models.Grupo
+	var grupo entities.Grupo
 	if err := database.InstanciaDB.Where("uuid = ?", payload.GrupoUuid).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
@@ -131,7 +131,7 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	var invitacion models.InvitacionGrupo
+	var invitacion entities.InvitacionGrupo
 
 	invitacion.Codigo = util.GenerateRandomString(16)
 	invitacion.FechaCaducidad = fechaVal

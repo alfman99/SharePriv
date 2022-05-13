@@ -27,22 +27,22 @@ func EncriptarArchivo(data []byte, key []byte) []byte {
 	return cipherData
 }
 
-func DesencriptarArchivo(data []byte, key []byte) []byte {
+func DesencriptarArchivo(data []byte, key []byte) ([]byte, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
-		panic(err)
+		panic("error NewCipher")
 	}
 	gcm, err := cipher.NewGCM(c)
 	if err != nil {
-		panic(err)
+		panic("error NewGCM")
 	}
 	nonceSize := gcm.NonceSize()
 	nonce, cipherData := data[:nonceSize], data[nonceSize:]
 	plainData, err := gcm.Open(nil, nonce, cipherData, nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return plainData
+	return plainData, nil
 }
 
 func GenerateRandomString(length int) string {

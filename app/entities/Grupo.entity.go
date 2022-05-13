@@ -1,4 +1,4 @@
-package models
+package entities
 
 import "time"
 
@@ -10,4 +10,8 @@ type Grupo struct {
 	Archivos            []ArchivoGrupo
 	InvitacionesGrupo   []InvitacionGrupo
 	PropietarioUsername string `gorm:"not null; type:varchar(50);"`
+}
+
+func (u *Grupo) TableName() string {
+	return "grupo"
 }

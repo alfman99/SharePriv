@@ -2,7 +2,7 @@ package database
 
 import (
 	"log"
-	"sharepriv/models"
+	"sharepriv/entities"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -25,12 +25,12 @@ func ConnectDB() {
 
 	// Hacer migraciones
 	db.AutoMigrate(
-		&models.Grupo{},
-		&models.InvitacionGrupo{},
-		&models.InvitacionRegistro{},
-		&models.ArchivoGrupo{},
-		&models.ArchivoPublico{},
-		&models.Usuario{},
+		&entities.Grupo{},
+		&entities.InvitacionGrupo{},
+		&entities.InvitacionRegistro{},
+		&entities.ArchivoGrupo{},
+		&entities.ArchivoPublico{},
+		&entities.Usuario{},
 	)
 
 	InstanciaDB = db
