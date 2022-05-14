@@ -112,6 +112,61 @@ func createGroup(c *fiber.Ctx) error {
 
 func joinGroup(c *fiber.Ctx) error {
 
-	return nil
+	invitacionCode := c.FormValue("invitacion")
+
+	if len(invitacionCode) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "La invitacion no puede estar vacia",
+		})
+	}
+
+	var invitacion entities.InvitacionGrupo
+	if err := database.InstanciaDB.Where("codigo = ?", invitacionCode).First(&invitacion).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "La invitacion no existe",
+		})
+	}
+
+	var grupo entities.Grupo
+	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("uuid = ?", invitacion.GrupoUuid).First(&grupo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El grupo no existe",
+		})
+	}
+
+	participante := false
+
+	for _, usuario := range grupo.Usuarios {
+		if usuario.Username == c.Locals("user").(string) {
+			participante = true
+			break
+		}
+	}
+
+	if participante {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario ya pertenece al grupo",
+		})
+	}
+
+	grupo.Usuarios = append(grupo.Usuarios, entities.Usuario{
+		Username: c.Locals("user").(string),
+	})
+
+	if err := database.InstanciaDB.Save(&grupo).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error al unirse al grupo",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Usuario unido al grupo",
+	})
 
 }
