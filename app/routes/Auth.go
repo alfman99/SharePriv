@@ -13,7 +13,7 @@ import (
 
 func SetAuthRoutes(app fiber.Router) {
 	// Login user
-	app.Post("/login", setLogin) // TODO
+	app.Post("/login", setLogin) // ACABADO
 }
 
 func setLogin(c *fiber.Ctx) error {
