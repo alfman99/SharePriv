@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	"time"
+)
 
 type Grupo struct {
 	Uuid                string    `gorm:"primary_key; type:uuid; default:uuid_generate_v4()"`
@@ -10,6 +12,12 @@ type Grupo struct {
 	Archivos            []ArchivoGrupo
 	InvitacionesGrupo   []InvitacionGrupo
 	PropietarioUsername string `gorm:"not null; type:varchar(50);"`
+}
+
+type UsuariosGrupos struct {
+	Grupo_uuid       string    `gorm:"primary_key; type:uuid; not null"`
+	Usuario_username string    `gorm:"primary_key; type:varchar(50); not null"`
+	FechaRegistro    time.Time `gorm:"default:now(); not null"`
 }
 
 func (u *Grupo) TableName() string {

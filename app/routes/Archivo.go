@@ -68,7 +68,6 @@ func getArchivoPublico(c *fiber.Ctx) error {
 
 	c.Context().SetContentType(archivo.Mime)
 	return c.Status(200).Send(decryptedFile)
-
 }
 
 func uploadArchivoPublico(c *fiber.Ctx) error {
@@ -131,7 +130,6 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(&archivo.Uuid)
-
 }
 
 func getArchivoGrupo(c *fiber.Ctx) error {
@@ -200,7 +198,6 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 	c.Context().SetContentType(archivo.Mime)
 
 	return c.Status(200).Send(decryptedFile)
-
 }
 
 func uploadArchivoGrupo(c *fiber.Ctx) error {

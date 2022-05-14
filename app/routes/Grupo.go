@@ -59,7 +59,6 @@ func getGroup(c *fiber.Ctx) error {
 		"status": "success",
 		"data":   grupo,
 	})
-
 }
 
 func createGroup(c *fiber.Ctx) error {
@@ -106,5 +105,4 @@ func createGroup(c *fiber.Ctx) error {
 			"nombre": grupo.Nombre,
 		},
 	})
-
 }

@@ -23,6 +23,12 @@ func ConnectDB() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 	log.Println("Hacer migraciones")
 
+	err = db.SetupJoinTable(&entities.Usuario{}, "Grupos", &entities.UsuariosGrupos{})
+
+	if err != nil {
+		panic(err)
+	}
+
 	// Hacer migraciones
 	db.AutoMigrate(
 		&entities.Grupo{},

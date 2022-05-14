@@ -75,5 +75,4 @@ func setLogin(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Token generado",
 	})
-
 }
