@@ -17,10 +17,9 @@ func SetGroupRoutes(app fiber.Router) {
 	app.Post("/", middleware.CheckAuth, createGroup) // ACABADO
 
 	// Unirse a grupo
-	app.Post("/join", middleware.CheckAuth, joinGroup) // TODO
+	app.Post("/join", middleware.CheckAuth, joinGroup) // ACABADO
 }
 
-// TODO: Get user group info
 func getGroup(c *fiber.Ctx) error {
 
 	identifier := c.Params("uuid")
@@ -168,5 +167,4 @@ func joinGroup(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Usuario unido al grupo",
 	})
-
 }
