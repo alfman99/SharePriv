@@ -15,6 +15,9 @@ func SetGroupRoutes(app fiber.Router) {
 
 	// Create group
 	app.Post("/", middleware.CheckAuth, createGroup) // ACABADO
+
+	// Unirse a grupo
+	app.Post("/join", middleware.CheckAuth, joinGroup) // TODO
 }
 
 // TODO: Get user group info
@@ -105,4 +108,10 @@ func createGroup(c *fiber.Ctx) error {
 			"nombre": grupo.Nombre,
 		},
 	})
+}
+
+func joinGroup(c *fiber.Ctx) error {
+
+	return nil
+
 }
