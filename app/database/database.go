@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 	"sharepriv/entities"
 
 	"gorm.io/driver/postgres"
@@ -12,7 +13,7 @@ import (
 var InstanciaDB *gorm.DB
 
 func ConnectDB() {
-	connectionString := "postgres://postgres:postgrespw@localhost:49153"
+	connectionString := os.Getenv("DB_URL")
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 	if err != nil {

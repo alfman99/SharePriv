@@ -8,6 +8,7 @@ import (
 	"sharepriv/util"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 func setupRoutes(app *fiber.App) {
@@ -43,6 +44,13 @@ func setupRoutes(app *fiber.App) {
 }
 
 func prod() {
+
+	err := godotenv.Load()
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
 	database.ConnectDB()
 
 	app := fiber.New()
