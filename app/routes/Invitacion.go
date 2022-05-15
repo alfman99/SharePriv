@@ -71,7 +71,6 @@ func createInvitacionRegistro(c *fiber.Ctx) error {
 		"status": "success",
 		"data":   invitacion,
 	})
-
 }
 
 func createInvitacionGrupo(c *fiber.Ctx) error {
@@ -150,5 +149,4 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 		"status": "success",
 		"data":   invitacion,
 	})
-
 }

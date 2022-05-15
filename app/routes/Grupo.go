@@ -163,6 +163,15 @@ func joinGroup(c *fiber.Ctx) error {
 		})
 	}
 
+	invitacion.Usos = invitacion.Usos + 1
+
+	if err := database.InstanciaDB.Save(&invitacion).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error al actualizar la invitacion",
+		})
+	}
+
 	return c.Status(200).JSON(fiber.Map{
 		"status":  "success",
 		"message": "Usuario unido al grupo",

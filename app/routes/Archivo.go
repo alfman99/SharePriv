@@ -21,7 +21,7 @@ func SetArchivoRoutes(app fiber.Router) {
 
 	// Archivo Grupo
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/:uuid/:clave", middleware.CheckAuth, getArchivoGrupo) // ACABADO
+	app.Get("/grupo/:uuid", middleware.CheckAuth, getArchivoGrupo) // ACABADO
 	// Middleware de autenticacion ACTIVADO
 	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // ACABADO
 }
@@ -145,15 +145,6 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	claveEncriptacion := c.Params("clave")
-
-	if len(claveEncriptacion) != 32 {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "La clave de encriptacion debe ser de 32 bytes",
-		})
-	}
-
 	var archivo entities.ArchivoGrupo
 	if err := database.InstanciaDB.Where("uuid = ?", identificador).First(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -186,18 +177,9 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	decryptedFile, err := util.DesencriptarArchivo(archivo.Data, []byte(claveEncriptacion))
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "No se pudo desencriptar el archivo, la clave es incorrecta",
-		})
-	}
-
 	c.Context().SetContentType(archivo.Mime)
 
-	return c.Status(200).Send(decryptedFile)
+	return c.Status(200).Send(archivo.Data)
 }
 
 func uploadArchivoGrupo(c *fiber.Ctx) error {
@@ -208,15 +190,6 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "No hay archivo en el body",
-		})
-	}
-
-	claveEncriptacion := c.FormValue("clave")
-
-	if len(claveEncriptacion) != 32 {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "La clave de encriptacion debe ser de 32 bytes",
 		})
 	}
 
@@ -245,10 +218,8 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	encryptedFile := util.EncriptarArchivo(data, []byte(claveEncriptacion))
-
 	var archivo entities.ArchivoGrupo
-	archivo.Data = encryptedFile
+	archivo.Data = data
 	archivo.Mime = mimeType
 	archivo.GrupoUuid = c.FormValue("grupo")
 	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo

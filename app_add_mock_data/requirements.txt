@@ -1,2 +1,2 @@
 requests==2.27.1
-thispersondoesnotexist==1.0.2
+randimage==1.2

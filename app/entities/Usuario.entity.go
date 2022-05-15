@@ -16,7 +16,7 @@ type Usuario struct {
 	PropietarioGrupos  []Grupo   `gorm:"foreignKey:PropietarioUsername"`
 	PropietarioArchivo []Archivo `gorm:"foreignkey:PropietarioArchivo"`
 
-	InvitacionRegistroCodigo string `json:"-" gorm:"not null; type:varchar(50);"`
+	InvitacionRegistroCodigo string `json:"-" gorm:"type:varchar(50);"`
 }
 
 func (u *Usuario) TableName() string {

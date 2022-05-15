@@ -20,8 +20,6 @@ type ArchivoGrupo struct {
 
 type ArchivoPublico struct {
 	Archivo
-
-	Password string `gorm:"type:varchar(50)"`
 }
 
 func (u *ArchivoGrupo) TableName() string {
