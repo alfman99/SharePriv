@@ -6,7 +6,7 @@ import (
 	"sharepriv/middleware"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 
 	"github.com/gofiber/fiber/v2"
 )
