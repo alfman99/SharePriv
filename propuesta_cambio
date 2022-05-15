@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-05-15T22:50:54.717Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36" etag="sK8u1C4RoycmUVdrukbc" version="18.0.5" type="github">
+<mxfile host="app.diagrams.net" modified="2022-05-15T22:51:30.302Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36" etag="NdFeoFxUeOk3NC8Hcdlt" version="18.0.5" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="2249" dy="1923" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -138,9 +138,6 @@
             <mxPoint x="208" y="162.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="T4BPeuCS6PtcCn1ei8NR-77" value="RS: Dado un Grupo todos los Archivo Grupo que pertenecen a ese Grupo deben estar encriptados con la clave publica asociada al grupo." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="-240" y="-160" width="457" height="30" as="geometry" />
-        </mxCell>
         <mxCell id="T4BPeuCS6PtcCn1ei8NR-78" value="invita" style="endArrow=none;html=1;endSize=12;startArrow=none;startSize=14;startFill=0;edgeStyle=orthogonalEdgeStyle;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endFill=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="T4BPeuCS6PtcCn1ei8NR-46" target="T4BPeuCS6PtcCn1ei8NR-56" edge="1">
           <mxGeometry x="-0.37" y="-17" relative="1" as="geometry">
             <mxPoint x="330" y="220" as="sourcePoint" />
@@ -189,7 +186,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="T4BPeuCS6PtcCn1ei8NR-86" value="RS: El único Usuario que puede crear una Invitación Grupo es el Usuario que es propietario del Grupo al que quiere crear la invitación&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="-270" y="-115" width="457" height="30" as="geometry" />
+          <mxGeometry x="-280" y="-30" width="457" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
