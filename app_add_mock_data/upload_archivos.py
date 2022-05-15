@@ -10,7 +10,9 @@ archivos_por_usuario = 5
 usuarios_total = total_archivos // archivos_por_usuario
 
 all_users_gen = []
+
 all_archivos_public_uploaded = []
+
 all_archivos_grupo_uploaded = []
 
 
@@ -100,7 +102,9 @@ def crear_invitacion_grupo(cookies, uuid_grupo):
   url = 'http://localhost:3000/api/invitaciones/grupo/crear'
   data = {"fechaCaducidad": "2023-05-05", "maximoUsos": str(usuarios_total), "grupoUuid": uuid_grupo}
   response = requests.post(url, data=data, cookies=cookies)
-  return response.json()
+  data = response.json()
+  print("Invitacion creada: " + str(data))
+  return data
 
 
 def unirse_grupo(cookies, invitacion):

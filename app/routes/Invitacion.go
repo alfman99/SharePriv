@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 func SetInvitacionRegistroRoutes(group fiber.Router) {
@@ -107,16 +106,16 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 	}
 
 	// Check if string is valid uuid
-	if _, err := uuid.Parse(payload.GrupoUuid); err != nil {
+	/*if _, err := uuid.Parse(payload.GrupoUuid); err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El formato del uuid del grupo no es valido",
 		})
-	}
+	}*/
 
 	// Check if group exists
 	var grupo entities.Grupo
-	if err := database.InstanciaDB.Where("uuid = ?", payload.GrupoUuid).First(&grupo).Error; err != nil {
+	if err := database.InstanciaDB.Where("id = ?", payload.GrupoUuid).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo para el que quieres crear la invitación no existe",
@@ -136,7 +135,7 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 	invitacion.FechaCaducidad = fechaVal
 	invitacion.MaximoUsos = uint(maximoUsos)
 	invitacion.Propietario = c.Locals("user").(string)
-	invitacion.GrupoUuid = payload.GrupoUuid
+	invitacion.GrupoId = payload.GrupoUuid
 
 	if err := database.InstanciaDB.Create(&invitacion).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{
