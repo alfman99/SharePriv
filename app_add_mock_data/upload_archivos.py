@@ -123,9 +123,6 @@ def main():
   codigo_invitacion_grupo = crear_invitacion_grupo(cookies_login, uuid_grupo)["data"]["Codigo"]
   upload_files_carpeta_and_join_group('./archivos/', codigo_invitacion_grupo, uuid_grupo)
   
-
-
-
   guardar_info_subida('all_users_gen.json', all_users_gen)
   guardar_info_subida('all_archivos_public_uploaded.json', all_archivos_public_uploaded)
   guardar_info_subida('all_archivos_grupo_uploaded.json', all_archivos_grupo_uploaded)
