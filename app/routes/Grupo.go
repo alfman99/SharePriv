@@ -6,7 +6,6 @@ import (
 	"sharepriv/middleware"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 func SetGroupRoutes(app fiber.Router) {
@@ -24,17 +23,8 @@ func getGroup(c *fiber.Ctx) error {
 
 	identifier := c.Params("uuid")
 
-	_, err := uuid.Parse(identifier)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El identificador no es un UUID",
-		})
-	}
-
 	var grupo entities.Grupo
-	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("uuid = ?", identifier).First(&grupo).Error; err != nil {
+	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo no existe",
@@ -103,7 +93,7 @@ func createGroup(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Grupo creado",
 		"data": fiber.Map{
-			"uuid":   grupo.Uuid,
+			"uuid":   grupo.Id,
 			"nombre": grupo.Nombre,
 		},
 	})
@@ -129,7 +119,7 @@ func joinGroup(c *fiber.Ctx) error {
 	}
 
 	var grupo entities.Grupo
-	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("uuid = ?", invitacion.GrupoUuid).First(&grupo).Error; err != nil {
+	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("id = ?", invitacion.GrupoId).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo no existe",

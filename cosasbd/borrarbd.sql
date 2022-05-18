@@ -5,3 +5,16 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO public;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
+
+
+
+
+
+
+
+
+
+DROP SCHEMA practica CASCADE;
+CREATE SCHEMA practica;

@@ -17,7 +17,7 @@ type Invitacion struct {
 type InvitacionGrupo struct {
 	Invitacion
 
-	GrupoUuid string `gorm:"not null; type:uuid"`
+	GrupoId string `gorm:"not null;"`
 }
 
 type InvitacionRegistro struct {

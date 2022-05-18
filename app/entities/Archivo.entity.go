@@ -3,7 +3,7 @@ package entities
 import "time"
 
 type Archivo struct {
-	Uuid             string    `gorm:"primary_key; type:uuid; default:uuid_generate_v4()"`
+	Id               string    `gorm:"primary_key;default:md5(concat(random()::text, clock_timestamp()::text))"`
 	Data             []byte    `gorm:"type:bytea"`
 	Visualizaciones  uint      `gorm:"default:0"`
 	FechaPublicacion time.Time `gorm:"default:now()"`
@@ -15,7 +15,7 @@ type Archivo struct {
 type ArchivoGrupo struct {
 	Archivo
 
-	GrupoUuid string
+	GrupoId string
 }
 
 type ArchivoPublico struct {

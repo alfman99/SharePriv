@@ -5,7 +5,7 @@ import (
 )
 
 type Grupo struct {
-	Uuid                string    `gorm:"primary_key; type:uuid; default:uuid_generate_v4()"`
+	Id                  string    `gorm:"primary_key;default:md5(concat(random()::text, clock_timestamp()::text))"`
 	Nombre              string    `gorm:"type:varchar(50); unique_index"`
 	FechaCreacion       time.Time `gorm:"default:now()"`
 	Usuarios            []Usuario `gorm:"many2many:usuarios_grupos"` // Asociativa
@@ -15,7 +15,7 @@ type Grupo struct {
 }
 
 type UsuariosGrupos struct {
-	Grupo_uuid       string    `gorm:"primary_key; type:uuid; not null"`
+	Grupo_Id         string    `gorm:"primary_key; not null"`
 	Usuario_username string    `gorm:"primary_key; type:varchar(50); not null"`
 	FechaRegistro    time.Time `gorm:"default:now(); not null"`
 }
