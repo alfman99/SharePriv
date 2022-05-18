@@ -4,8 +4,8 @@ import (
 	"sharepriv/database"
 	"sharepriv/entities"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+  "github.com/golang-jwt/jwt"
 )
 
 var JwtKey = []byte("fas8df8as3ll")

@@ -14,6 +14,7 @@ var InstanciaDB *gorm.DB
 
 func ConnectDB() {
 	connectionString := os.Getenv("DB_URL")
+	print(connectionString)
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 	if err != nil {
