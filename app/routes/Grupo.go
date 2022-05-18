@@ -23,15 +23,6 @@ func getGroup(c *fiber.Ctx) error {
 
 	identifier := c.Params("uuid")
 
-	/*_, err := uuid.Parse(identifier)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El identificador no es un UUID",
-		})
-	}*/
-
 	var grupo entities.Grupo
 	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{

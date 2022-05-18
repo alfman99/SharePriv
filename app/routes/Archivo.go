@@ -47,12 +47,10 @@ func getArchivoPublico(c *fiber.Ctx) error {
 	}
 
 	var archivo entities.ArchivoPublico
-	database.InstanciaDB.Where("id = ?", identificador).First(&archivo)
-
-	if archivo.Id == 0 {
-		return c.Status(400).JSON(fiber.Map{
+	if err := database.InstanciaDB.Where("id = ?", identificador).First(&archivo).Error; err != nil {
+		return c.Status(404).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El archivo no existe",
+			"message": "No se encontro el archivo",
 		})
 	}
 

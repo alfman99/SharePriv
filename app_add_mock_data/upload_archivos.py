@@ -3,18 +3,15 @@ import random
 import string
 import requests
 
-differenciator = "amg8"
-
-total_archivos = 50
-archivos_por_usuario = 5
+differenciator = "1"
+total_archivos = 100
+archivos_por_usuario = 10
 usuarios_total = total_archivos // archivos_por_usuario
-
 all_users_gen = []
-
 all_archivos_public_uploaded = []
-
 all_archivos_grupo_uploaded = []
-
+carpeta_archivos = "./archivos/1/"
+cookies_login = None
 
 def gen_invitaciones_registro(cookies):
   url = 'http://localhost:3000/api/invitaciones/registro/crear'
@@ -59,9 +56,9 @@ def generate_usuarios(invitacion):
 def upload_files_carpeta_and_join_group(carpeta, codigo_invitacion_grupo, uuid_grupo):
   cookie_usuario = None
   i = 0
-  usuario_act = usuarios_total - 1
+  usuario_act = len(all_users_gen) - 1
   for file_name in os.listdir(carpeta):
-    if i % usuarios_total == 0:
+    if i % archivos_por_usuario == 0:
       usuario = all_users_gen[usuario_act]
       cookie_usuario = get_cookies_login_user(usuario["username"], usuario["password"])
       unirse_grupo(cookie_usuario, codigo_invitacion_grupo)
@@ -69,13 +66,13 @@ def upload_files_carpeta_and_join_group(carpeta, codigo_invitacion_grupo, uuid_g
     if file_name.endswith('.png'):
       if random.randint(0, 1) == 0:
         clave = file_name.split('.')[0]
-        response = upload_file_public('./archivos/' + file_name, clave, cookie_usuario)
+        response = upload_file_public(carpeta_archivos + file_name, clave, cookie_usuario)
         all_archivos_public_uploaded.append({
           "clave": clave,
           "uuid": response
         })
       else:
-        response_grupo = upload_file_group('./archivos/' + file_name, cookie_usuario, uuid_grupo)
+        response_grupo = upload_file_group(carpeta_archivos + file_name, cookie_usuario, uuid_grupo)
         all_archivos_grupo_uploaded.append({
           "uuid": response_grupo
         })
@@ -120,12 +117,28 @@ def guardar_info_subida(archivo, datos):
 
 
 def main():
-  cookies_login = get_cookies_login_user('hola_como', 'test242')
-  codigo_registro = gen_invitaciones_registro(cookies_login)["data"]["Codigo"]
-  uuid_grupo = create_grupo(gen_clave_encript(5), cookies_login)["data"]["uuid"]
-  generate_usuarios(codigo_registro)
-  codigo_invitacion_grupo = crear_invitacion_grupo(cookies_login, uuid_grupo)["data"]["Codigo"]
-  upload_files_carpeta_and_join_group('./archivos/', codigo_invitacion_grupo, uuid_grupo)
+
+  inicio = 6
+  final = 20
+
+  for i in range(inicio, final + 1):
+
+    global differenciator
+    differenciator = str(i)
+
+    global carpeta_archivos
+    carpeta_archivos = "./archivos/" + differenciator + "/"
+
+    if i == inicio:
+      cookies_login = get_cookies_login_user('admin', 'admin_admin')
+    else:
+      cookies_login = get_cookies_login_user(all_users_gen[i]["username"], all_users_gen[i]["password"])
+
+    codigo_registro = gen_invitaciones_registro(cookies_login)["data"]["Codigo"]
+    uuid_grupo = create_grupo(gen_clave_encript(5), cookies_login)["data"]["uuid"]
+    generate_usuarios(codigo_registro)
+    codigo_invitacion_grupo = crear_invitacion_grupo(cookies_login, uuid_grupo)["data"]["Codigo"]
+    upload_files_carpeta_and_join_group(carpeta_archivos, codigo_invitacion_grupo, uuid_grupo)
   
   guardar_info_subida('all_users_gen.json', all_users_gen)
   guardar_info_subida('all_archivos_public_uploaded.json', all_archivos_public_uploaded)

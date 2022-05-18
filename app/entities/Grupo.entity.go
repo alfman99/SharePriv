@@ -5,7 +5,7 @@ import (
 )
 
 type Grupo struct {
-	Id                  uint      `gorm:"primary_key;autoIncrement"`
+	Id                  string    `gorm:"primary_key;default:md5(concat(random()::text, clock_timestamp()::text))"`
 	Nombre              string    `gorm:"type:varchar(50); unique_index"`
 	FechaCreacion       time.Time `gorm:"default:now()"`
 	Usuarios            []Usuario `gorm:"many2many:usuarios_grupos"` // Asociativa

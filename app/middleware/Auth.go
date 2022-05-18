@@ -3,7 +3,6 @@ package middleware
 import (
 	"sharepriv/database"
 	"sharepriv/entities"
-	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
@@ -60,15 +59,6 @@ func CheckGroupFormValue(c *fiber.Ctx) error {
 
 	grupo := c.FormValue("grupo")
 
-	grupoId, err := strconv.Atoi(grupo)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El grupo no es valido",
-		})
-	}
-
 	/*_, err := uuid.Parse(grupo)
 
 	if err != nil {
@@ -91,7 +81,7 @@ func CheckGroupFormValue(c *fiber.Ctx) error {
 	grupoEncontrado := false
 
 	for _, grp := range user.Grupos {
-		if grp.Id == uint(grupoId) {
+		if grp.Id == grupo {
 			grupoEncontrado = true
 			break
 		}
