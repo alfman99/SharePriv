@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-import io
 import os
 import random
 import string
@@ -8,11 +7,11 @@ from randimage import get_random_image
 import requests
 import json
 
-num_threads = 35
+num_threads = 10
 all_files_uploaded = []
 
 def guardar_info_subida(archivo, datos):
-  with open('./datos/' + archivo, 'w') as f:
+  with open(archivo, 'w') as f:
     f.write(str(datos))
 
 def gen_clave_encript(length):
