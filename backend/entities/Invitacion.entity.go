@@ -6,12 +6,12 @@ import (
 
 type Invitacion struct {
 	Codigo         string    `gorm:"primary_key; type:varchar(50);"`
-	FechaCreacion  time.Time `gorm:"default:now()"`
+	FechaCreacion  time.Time `gorm:"default:now();not null;"`
 	FechaCaducidad time.Time
-	MaximoUsos     uint
-	Usos           uint `gorm:"default:0"`
+	MaximoUsos     uint `gorm:"not null;"`
+	Usos           uint `gorm:"default:0;not null;"`
 
-	Propietario string `gorm:"foreignkey:PropietarioID"`
+	Propietario string `gorm:"not null"`
 }
 
 type InvitacionGrupo struct {
@@ -23,7 +23,7 @@ type InvitacionGrupo struct {
 type InvitacionRegistro struct {
 	Invitacion
 
-	// UsuariosInvitadosRegistro []Usuario `json:"-"`
+	UsuariosRegistrados []Usuario `gorm:"foreignkey:InvitacionRegistroCodigo"`
 }
 
 func (u *InvitacionGrupo) TableName() string {

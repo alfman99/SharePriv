@@ -1,2 +1,14 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<!-- <script context="module" lang="ts">
+  export async function load ({ fetch }: any) {
+    const response = await fetch('http://localhost:3000/api/users')
+    const users = await response.json()
+    console.log(users)
+    return {
+      users
+    }
+  }
+</script>
+ -->
+
+
+<h1>Index :)</h1>

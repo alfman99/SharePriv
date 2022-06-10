@@ -73,8 +73,8 @@ func createGroup(c *fiber.Ctx) error {
 	}
 
 	grupo := entities.Grupo{
-		Nombre:              nombre,
-		PropietarioUsername: c.Locals("user").(string),
+		Nombre:      nombre,
+		Propietario: c.Locals("user").(string),
 		Usuarios: []entities.Usuario{
 			{
 				Username: c.Locals("user").(string),

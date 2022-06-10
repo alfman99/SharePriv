@@ -122,7 +122,7 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	if grupo.PropietarioUsername != c.Locals("user").(string) {
+	if grupo.Propietario != c.Locals("user").(string) {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "No eres el propietario del grupo",

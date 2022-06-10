@@ -117,7 +117,7 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 	var archivo entities.ArchivoPublico
 	archivo.Data = encryptedFile
 	archivo.Mime = mimeType
-	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
+	archivo.Propietario = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
 
 	if err = database.InstanciaDB.Create(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
@@ -150,7 +150,7 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	var grupo entities.Grupo
+	/*var grupo entities.Grupo
 	if err := database.InstanciaDB.Preload("Usuarios").Where("id = ?", archivo.GrupoId).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
@@ -172,7 +172,7 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 			"status":  "error",
 			"message": "El usuario no pertenece al grupo",
 		})
-	}
+	}*/
 
 	c.Context().SetContentType(archivo.Mime)
 
@@ -218,8 +218,8 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 	var archivo entities.ArchivoGrupo
 	archivo.Data = data
 	archivo.Mime = mimeType
-	archivo.GrupoId = c.FormValue("grupo")
-	archivo.PropietarioArchivo = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
+	// archivo.Pertenece = c.FormValue("grupo")
+	archivo.Propietario = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
 
 	if err = database.InstanciaDB.Create(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
