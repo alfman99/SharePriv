@@ -15,8 +15,7 @@ type Archivo struct {
 type ArchivoGrupo struct {
 	Archivo
 
-	GrupoId string `gorm:"not null"`
-	// Pertenece []Grupo `gorm:"foreignkey:Id"`
+	Pertenece []Grupo `gorm:"many2many:archivos_de_grupos;foreignkey:Id"`
 }
 
 type ArchivoPublico struct {

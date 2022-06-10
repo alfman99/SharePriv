@@ -23,6 +23,7 @@ type InvitacionGrupo struct {
 type InvitacionRegistro struct {
 	Invitacion
 
+	// Primero inicializar migración sin este campo, luego volver a iniciar con campo
 	UsuariosRegistrados []Usuario `gorm:"foreignkey:InvitacionRegistroCodigo"`
 }
 
