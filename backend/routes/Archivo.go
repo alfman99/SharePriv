@@ -24,19 +24,13 @@ func SetArchivoRoutes(app fiber.Router) {
 	app.Get("/grupo/:id", middleware.CheckAuth, getArchivoGrupo) // ACABADO
 	// Middleware de autenticacion ACTIVADO
 	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // ACABADO
+	// Middleware de autenticacion ACTIVADO
+	app.Post("/grupo/add", middleware.CheckAuth, addArchivoGrupo) // ACABADO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {
 
 	identificador := c.Params("id")
-	/*_, err := id.Parse(identificador)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El identificador no es un id",
-		})
-	}*/
 
 	claveEncriptacion := c.Params("clave")
 
@@ -233,4 +227,64 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(&archivo.Id)
+}
+
+func addArchivoGrupo(c *fiber.Ctx) error {
+
+	identificador := c.FormValue("id")
+	group := c.FormValue("grupo")
+
+	var archivo entities.ArchivoGrupo
+	if err := database.InstanciaDB.Preload("Pertenece").Where("id = ?", identificador).First(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El archivo no existe",
+		})
+	}
+
+	if len(group) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se especifico el grupo",
+		})
+	}
+
+	if util.ContainsGroup(archivo.Pertenece, group) {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El archivo ya pertenece al grupo",
+		})
+	}
+
+	var usuario entities.Usuario
+	if err := database.InstanciaDB.Preload("Grupos").Where("Username = ?", c.Locals("user")).Find(&usuario).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no existe",
+		})
+	}
+
+	if !util.ContainsGroup(usuario.Grupos, group) {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no pertenece al grupo que se quiere agregar el archivo",
+		})
+	}
+
+	archivo.Pertenece = append(archivo.Pertenece, entities.Grupo{
+		Id: group,
+	})
+
+	if err := database.InstanciaDB.Save(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo agregar el archivo al grupo",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "El archivo se agrego al grupo",
+	})
+
 }
