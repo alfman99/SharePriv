@@ -10,7 +10,7 @@ import (
 
 func SetGroupRoutes(app fiber.Router) {
 	// Get group by id
-	app.Get("/:uuid", middleware.CheckAuth, getGroup) // ACABADO
+	app.Get("/:id", middleware.CheckAuth, getGroup) // ACABADO
 
 	// Create group
 	app.Post("/", middleware.CheckAuth, createGroup) // ACABADO
@@ -21,7 +21,7 @@ func SetGroupRoutes(app fiber.Router) {
 
 func getGroup(c *fiber.Ctx) error {
 
-	identifier := c.Params("uuid")
+	identifier := c.Params("id")
 
 	var grupo entities.Grupo
 	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
@@ -93,7 +93,7 @@ func createGroup(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Grupo creado",
 		"data": fiber.Map{
-			"uuid":   grupo.Id,
+			"id":     grupo.Id,
 			"nombre": grupo.Nombre,
 		},
 	})

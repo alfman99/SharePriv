@@ -77,10 +77,10 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 	payload := struct {
 		FechaCaducidad string `json:"fecha_caducidad"`
 		MaximoUsos     string `json:"maximo_usos"`
-		GrupoUuid      string `json:"grupo_uuid"`
+		GrupoId        string `json:"grupo_id"`
 	}{}
 
-	if err := c.BodyParser(&payload); err != nil || payload.FechaCaducidad == "" || payload.MaximoUsos == "" || payload.GrupoUuid == "" {
+	if err := c.BodyParser(&payload); err != nil || payload.FechaCaducidad == "" || payload.MaximoUsos == "" || payload.GrupoId == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El body no tiene el formato correcto",
@@ -105,17 +105,9 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	// Check if string is valid uuid
-	/*if _, err := uuid.Parse(payload.GrupoUuid); err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El formato del uuid del grupo no es valido",
-		})
-	}*/
-
 	// Check if group exists
 	var grupo entities.Grupo
-	if err := database.InstanciaDB.Where("id = ?", payload.GrupoUuid).First(&grupo).Error; err != nil {
+	if err := database.InstanciaDB.Where("id = ?", payload.GrupoId).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo para el que quieres crear la invitación no existe",
@@ -135,7 +127,7 @@ func createInvitacionGrupo(c *fiber.Ctx) error {
 	invitacion.FechaCaducidad = fechaVal
 	invitacion.MaximoUsos = uint(maximoUsos)
 	invitacion.Propietario = c.Locals("user").(string)
-	invitacion.GrupoId = payload.GrupoUuid
+	invitacion.GrupoId = payload.GrupoId
 
 	if err := database.InstanciaDB.Create(&invitacion).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{

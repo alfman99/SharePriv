@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"sharepriv/database"
@@ -14,26 +15,26 @@ import (
 func SetArchivoRoutes(app fiber.Router) {
 	// Archivo
 	// Archivo Publico
-	app.Get("/publico/:uuid/:clave", getArchivoPublico) // ACABADO
+	app.Get("/publico/:id/:clave", getArchivoPublico) // ACABADO
 	// Middleware de autenticacion ACTIVADO
 	app.Post("/publico/upload", middleware.CheckAuth, uploadArchivoPublico) // ACABADO
 
 	// Archivo Grupo
 	// Middleware de autenticacion ACTIVADO
-	app.Get("/grupo/:uuid", middleware.CheckAuth, getArchivoGrupo) // ACABADO
+	app.Get("/grupo/:id", middleware.CheckAuth, getArchivoGrupo) // ACABADO
 	// Middleware de autenticacion ACTIVADO
 	app.Post("/grupo/upload", middleware.CheckAuth, middleware.CheckGroupFormValue, uploadArchivoGrupo) // ACABADO
 }
 
 func getArchivoPublico(c *fiber.Ctx) error {
 
-	identificador := c.Params("uuid")
-	/*_, err := uuid.Parse(identificador)
+	identificador := c.Params("id")
+	/*_, err := id.Parse(identificador)
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El identificador no es un UUID",
+			"message": "El identificador no es un id",
 		})
 	}*/
 
@@ -131,27 +132,20 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 
 func getArchivoGrupo(c *fiber.Ctx) error {
 
-	identificador := c.Params("uuid")
-
-	/*_, err := uuid.Parse(identificador)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El identificador del archivo no es un UUID",
-		})
-	}*/
+	identificador := c.Params("id")
 
 	var archivo entities.ArchivoGrupo
-	if err := database.InstanciaDB.Where("id = ?", identificador).First(&archivo).Error; err != nil {
+	if err := database.InstanciaDB.Preload("Pertenece").Where("id = ?", identificador).First(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El archivo no existe",
 		})
 	}
 
-	/*var grupo entities.Grupo
-	if err := database.InstanciaDB.Preload("Usuarios").Where("id = ?", archivo.GrupoId).First(&grupo).Error; err != nil {
+	fmt.Println(archivo)
+
+	var grupo entities.Grupo
+	if err := database.InstanciaDB.Preload("Usuarios").Where("id = ?", archivo.Pertenece).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo del archivo no existe",
@@ -172,7 +166,7 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 			"status":  "error",
 			"message": "El usuario no pertenece al grupo",
 		})
-	}*/
+	}
 
 	c.Context().SetContentType(archivo.Mime)
 

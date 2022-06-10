@@ -5,7 +5,7 @@ import (
 	"sharepriv/entities"
 
 	"github.com/gofiber/fiber/v2"
-  "github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt"
 )
 
 var JwtKey = []byte("fas8df8as3ll")
@@ -58,15 +58,6 @@ func CheckAuth(c *fiber.Ctx) error {
 func CheckGroupFormValue(c *fiber.Ctx) error {
 
 	grupo := c.FormValue("grupo")
-
-	/*_, err := uuid.Parse(grupo)
-
-	if err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El identificador del grupo no es un UUID",
-		})
-	}*/
 
 	username := c.Locals("user").(string)
 
