@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"math/rand"
+	"sharepriv/entities"
 	"time"
 )
 
@@ -52,4 +53,14 @@ func GenerateRandomString(length int) string {
 		b[i] = letter[seededRand.Intn(len(letter))]
 	}
 	return string(b)
+}
+
+func ContainsGroup(s []entities.Grupo, Id string) bool {
+	for _, v := range s {
+		if v.Id == Id {
+			return true
+		}
+	}
+
+	return false
 }

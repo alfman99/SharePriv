@@ -142,20 +142,20 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(archivo)
-
-	var grupo entities.Grupo
-	if err := database.InstanciaDB.Preload("Usuarios").Where("id = ?", archivo.Pertenece).First(&grupo).Error; err != nil {
+	var usuario entities.Usuario
+	if err := database.InstanciaDB.Preload("Grupos").Where("Username = ?", c.Locals("user")).Find(&usuario).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El grupo del archivo no existe",
+			"message": "El usuario no existe",
 		})
 	}
 
+	fmt.Println(usuario)
+
 	encontrado := false
 
-	for _, usuario := range grupo.Usuarios {
-		if usuario.Username == c.Locals("user").(string) {
+	for _, grupo := range usuario.Grupos {
+		if util.ContainsGroup(archivo.Pertenece, grupo.Id) {
 			encontrado = true
 			break
 		}
@@ -164,7 +164,7 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 	if !encontrado {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El usuario no pertenece al grupo",
+			"message": "El usuario no pertenece a ningun grupo del que se puede ver este archivo",
 		})
 	}
 
@@ -176,11 +176,19 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 func uploadArchivoGrupo(c *fiber.Ctx) error {
 
 	file, err := c.FormFile("file")
+	group := c.FormValue("grupo")
 
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "No hay archivo en el body",
+		})
+	}
+
+	if len(group) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se especifico el grupo",
 		})
 	}
 
@@ -212,7 +220,9 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 	var archivo entities.ArchivoGrupo
 	archivo.Data = data
 	archivo.Mime = mimeType
-	// archivo.Pertenece = c.FormValue("grupo")
+	archivo.Pertenece = append(archivo.Pertenece, entities.Grupo{
+		Id: group,
+	})
 	archivo.Propietario = c.Locals("user").(string) // Cambiar por el usuario que subio el archivo
 
 	if err = database.InstanciaDB.Create(&archivo).Error; err != nil {

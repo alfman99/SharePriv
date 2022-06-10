@@ -11,7 +11,7 @@ type Invitacion struct {
 	MaximoUsos     uint `gorm:"not null;"`
 	Usos           uint `gorm:"default:0;not null;"`
 
-	Propietario string
+	Propietario string `gorm:"type:varchar(50);not null;"`
 }
 
 type InvitacionGrupo struct {
