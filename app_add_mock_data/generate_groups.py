@@ -2,10 +2,11 @@ from concurrent.futures import ThreadPoolExecutor
 import json
 import random
 import string
+import time
 import requests
 from faker import Faker
 
-num_threads = 500
+num_threads = 250
 fakeInst = Faker('es_ES')
 
 def gen_clave_encript(length):
@@ -16,6 +17,15 @@ def get_cookies_login_user(username, password):
   data = {'username': username, 'password': password}
   response = requests.post(url, data=data)
   return response.cookies
+
+def str_time_prop(start, end, time_format, prop):
+  stime = time.mktime(time.strptime(start, time_format))
+  etime = time.mktime(time.strptime(end, time_format))
+  ptime = stime + prop * (etime - stime)
+  return time.strftime(time_format, time.localtime(ptime))
+
+def random_date(start, end, prop):
+  return str_time_prop(start, end, '%Y-%m-%d', prop)
 
 def process_user(profile):
   try:
@@ -50,6 +60,14 @@ def process_user(profile):
     response = requests.post(url, data={
       'nombre': grupo_nombre,
     }, cookies=cookies)
+
+    json_datos = response.json()
+    id_grupo = json_datos['data']['id']
+    requests.post('http://localhost:3000/api/invitaciones/grupo/crear', cookies=cookies, data={
+      'fechaCaducidad': random_date("2022-06-10", "2050-1-1", random.random()),
+      'maximoUsos': random.randint(50, 400),
+      'grupoId': id_grupo,
+    })
 
     # print('RESPUESTA GRUPO', response)
 

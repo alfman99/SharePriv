@@ -76,7 +76,7 @@ def process_user(obj_user):
 def start_things(data):
   with ThreadPoolExecutor(num_threads) as executor:
     executor.map(process_user, data)
-    executor.shutdown(wait=True)      
+    executor.shutdown(wait=True)
 
 def main():
   file_usuarios = open("X:/Carrera/DABD/SharePriv/app_add_mock_data/datos/all_users_gen.json", "r")
