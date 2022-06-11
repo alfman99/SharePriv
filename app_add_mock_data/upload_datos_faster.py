@@ -20,10 +20,24 @@ def gen_clave_encript(length):
 def gen_file():
   clave_encripcion = gen_clave_encript(32)
   carpeta = 'X:/Carrera/DABD/SharePriv/app_add_mock_data/tmp/'
-  image_size = (128, 128)
-  image = get_random_image(image_size)
-  matplotlib.image.imsave(carpeta + clave_encripcion + '.png', image)
-  return open(carpeta + clave_encripcion + '.png', 'rb')
+
+  random_num = random.randint(1, 5)
+
+  if random_num == 1:
+    image_size = (128, 128)
+    image = get_random_image(image_size)
+    matplotlib.image.imsave(carpeta + clave_encripcion + '.png', image)
+    return open(carpeta + clave_encripcion + '.png', 'rb')
+  elif random_num == 2:
+    txt_content = gen_clave_encript(random.randint(1, 2048))
+    with open(carpeta + clave_encripcion + '.txt', 'w') as f:
+      f.write(txt_content)
+    return open(carpeta + clave_encripcion + '.txt', 'rb')
+  else:
+    image_size = (random.randint(100, 500), random.randint(100, 500))
+    image = get_random_image(image_size)
+    matplotlib.image.imsave(carpeta + clave_encripcion + '.jpeg', image)
+    return open(carpeta + clave_encripcion + '.jpeg', 'rb')
 
 def get_cookies_login_user(username, password):
   url = 'http://localhost:3000/api/auth/login'

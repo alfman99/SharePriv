@@ -118,7 +118,7 @@ def guardar_info_subida(archivo, datos):
 
 def main():
 
-  inicio = 6
+  inicio = 1
   final = 20
 
   for i in range(inicio, final + 1):
