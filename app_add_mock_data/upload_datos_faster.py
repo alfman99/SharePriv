@@ -2,12 +2,10 @@ from concurrent.futures import ThreadPoolExecutor
 import os
 import random
 import string
-import matplotlib
-from randimage import get_random_image
 import requests
 import json
 
-num_threads = 10
+num_threads = 100
 all_files_uploaded = []
 
 def guardar_info_subida(archivo, datos):
@@ -17,27 +15,12 @@ def guardar_info_subida(archivo, datos):
 def gen_clave_encript(length):
   return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
 
-def gen_file():
-  clave_encripcion = gen_clave_encript(32)
-  carpeta = 'X:/Carrera/DABD/SharePriv/app_add_mock_data/tmp/'
+def get_next_file():
+  for directory in os.listdir('./archivos/'):
+    for file in os.listdir('./archivos/' + directory):
+      yield open('./archivos/' + directory + '/' + file, 'rb')
 
-  random_num = random.randint(1, 5)
-
-  if random_num == 1:
-    image_size = (128, 128)
-    image = get_random_image(image_size)
-    matplotlib.image.imsave(carpeta + clave_encripcion + '.png', image)
-    return open(carpeta + clave_encripcion + '.png', 'rb')
-  elif random_num == 2:
-    txt_content = gen_clave_encript(random.randint(1, 2048))
-    with open(carpeta + clave_encripcion + '.txt', 'w') as f:
-      f.write(txt_content)
-    return open(carpeta + clave_encripcion + '.txt', 'rb')
-  else:
-    image_size = (random.randint(100, 500), random.randint(100, 500))
-    image = get_random_image(image_size)
-    matplotlib.image.imsave(carpeta + clave_encripcion + '.jpeg', image)
-    return open(carpeta + clave_encripcion + '.jpeg', 'rb')
+file_generator = get_next_file()
 
 def get_cookies_login_user(username, password):
   url = 'http://localhost:3000/api/auth/login'
@@ -46,7 +29,7 @@ def get_cookies_login_user(username, password):
   return response.cookies
 
 def upload_public_file(cookies):
-  archivo = gen_file()
+  archivo = file_generator.send(None)
   url = 'http://localhost:3000/api/archivos/publico/upload'
   clave_encriptacion = gen_clave_encript(32)
   files = {'file': archivo}
@@ -68,6 +51,8 @@ def process_user(obj_user):
     cookies = get_cookies_login_user(obj_user["username"], obj_user["password"])
     uploaded_file = upload_public_file(cookies)
     all_files_uploaded.append(uploaded_file)
+
+    print("Uploaded file:", uploaded_file)
     print("Se han subido unas cuantas imagenes")
   except KeyboardInterrupt:
     print("Interrupted by user")
