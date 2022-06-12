@@ -9,7 +9,7 @@ type Archivo struct {
 	FechaPublicacion time.Time `gorm:"default:now()"`
 	Mime             string    `gorm:"not null"`
 
-	Propietario string
+	Propietario string `gorm:"not null; type:varchar(50);"`
 }
 
 type ArchivoGrupo struct {
