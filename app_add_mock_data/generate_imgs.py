@@ -3,7 +3,6 @@ from importlib.resources import path
 import os
 import random
 import string
-from unicodedata import category
 from randimage import get_random_image
 import matplotlib
 from faker import Faker
