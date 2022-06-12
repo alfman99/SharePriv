@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"sharepriv/database"
+	"sharepriv/entities"
 	"sharepriv/middleware"
 	"sharepriv/routes"
-	"sharepriv/util"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -61,14 +61,20 @@ func prod() {
 }
 
 func testing() {
-	/*test := util.EncriptarArchivo([]byte("♀♀µ┼"), []byte("passphrasewhichneedstobe32bytes!"))
+	err := godotenv.Load()
 
-	fmt.Println(string(test))
+	if err != nil {
+		panic("Error loading .env file")
+	}
 
-	fmt.Println(util.DesencriptarArchivo(test, []byte("passphrasewhichneedstobe32bytes!")))*/
+	database.ConnectDB()
 
-	fmt.Println(util.GenerateRandomString(16))
-	fmt.Println(util.GenerateRandomString(16))
+	var usuario entities.Usuario
+	if err := database.InstanciaDB.Preload("PropietarioArchivoGrupo").First(&usuario).Error; err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(usuario.PropietarioArchivoGrupo[0].Id)
 
 }
 
