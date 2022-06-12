@@ -235,7 +235,7 @@ func addArchivoGrupo(c *fiber.Ctx) error {
 	group := c.FormValue("grupo")
 
 	var archivo entities.ArchivoGrupo
-	if err := database.InstanciaDB.Preload("Pertenece").Where("id = ?", identificador).First(&archivo).Error; err != nil {
+	if err := database.InstanciaDB.Where("id = ?", identificador).First(&archivo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El archivo no existe",
@@ -249,25 +249,10 @@ func addArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	if util.ContainsGroup(archivo.Pertenece, group) {
+	if archivo.Propietario != c.Locals("user").(string) {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
-			"message": "El archivo ya pertenece al grupo",
-		})
-	}
-
-	var usuario entities.Usuario
-	if err := database.InstanciaDB.Preload("Grupos").Where("Username = ?", c.Locals("user")).Find(&usuario).Error; err != nil {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El usuario no existe",
-		})
-	}
-
-	if !util.ContainsGroup(usuario.Grupos, group) {
-		return c.Status(400).JSON(fiber.Map{
-			"status":  "error",
-			"message": "El usuario no pertenece al grupo que se quiere agregar el archivo",
+			"message": "El usuario no es el propietario del archivo",
 		})
 	}
 
