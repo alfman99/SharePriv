@@ -13,8 +13,10 @@ type Usuario struct {
 	InvitacionesRegistroCreadas []InvitacionRegistro `json:"-" gorm:"foreignkey:Propietario"`
 	InvitacionesGrupoCreadas    []InvitacionGrupo    `json:"-" gorm:"foreignkey:Propietario"`
 
-	PropietarioGrupos  []Grupo   `gorm:"foreignKey:Propietario"`
-	PropietarioArchivo []Archivo `gorm:"foreignkey:Propietario"`
+	PropietarioGrupos []Grupo `gorm:"foreignKey:Propietario"`
+
+	PropietarioArchivoPublico []ArchivoPublico `gorm:"foreignkey:Propietario"`
+	PropietarioArchivoGrupo   []ArchivoGrupo   `gorm:"foreignkey:Propietario"`
 
 	InvitacionRegistroCodigo string `json:"-" gorm:"type:varchar(50); not null;"`
 }
