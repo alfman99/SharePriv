@@ -1,11 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor
-import os
-import random
-import string
 import requests
 import json
 
-num_threads = 100
+num_threads = 200
 all_files_uploaded = []
 
 imagenes = None
@@ -21,9 +18,6 @@ def get_cookies_login_user(username, password):
   return response.cookies
 
 def add_file_to_group(cookies, group_id, img_id):
-
-  print('GROUP ID', group_id, 'IMG_ID', img_id)
-
   url = 'http://localhost:3000/api/archivos/grupo/add'
   data = {
     'grupo': group_id,
@@ -31,7 +25,7 @@ def add_file_to_group(cookies, group_id, img_id):
     }
   try:
     response = requests.post(url, data=data, cookies=cookies)
-    return response.text
+    return response.json()
   except Exception as e:
     print("Exception!!", e)
     return None
@@ -39,9 +33,14 @@ def add_file_to_group(cookies, group_id, img_id):
 def process_user(obj_user):
   try:
     cookies = get_cookies_login_user(obj_user["username"], obj_user["password"])
-    for imagen in imagenes:
-      for grupo in obj_user["grupos"]:
-        print(add_file_to_group(cookies, grupo, imagen["archivo"]))
+    for grupo in obj_user["grupos"]:
+      for imagen in imagenes:
+        response = add_file_to_group(cookies, grupo, imagen["archivo"])
+        if response['message'] == 'El usuario no es el propietario del archivo':
+          print(imagen)
+          print(grupo)
+          print(obj_user)
+          print("El usuario no es el propietario del archivo")
 
     print("Added file to groups")
   except KeyboardInterrupt:
