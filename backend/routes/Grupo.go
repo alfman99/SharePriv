@@ -24,7 +24,7 @@ func getGroup(c *fiber.Ctx) error {
 	identifier := c.Params("id")
 
 	var grupo entities.Grupo
-	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
+	if err := database.InstanciaDB.Preload("Usuarios").Preload("Archivos").Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El grupo no existe",

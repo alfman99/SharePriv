@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"sharepriv/database"
 	"sharepriv/entities"
 	"sharepriv/middleware"
@@ -13,7 +14,10 @@ import (
 
 func SetAuthRoutes(app fiber.Router) {
 	// Login user
-	app.Post("/login", setLogin) // ACABADO
+	app.Post("/login", setLogin)                            // ACABADO
+	app.Get("/validate", middleware.CheckAuth, getValidate) // ACABADO
+
+	app.Get("/grupos", middleware.CheckAuth, getUserGrupos) // ACABADO
 }
 
 func setLogin(c *fiber.Ctx) error {
@@ -65,14 +69,60 @@ func setLogin(c *fiber.Ctx) error {
 		})
 	}
 
-	c.Cookie(&fiber.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
-
 	return c.Status(200).JSON(fiber.Map{
 		"status":  "success",
 		"message": "Token generado",
+		"token":   tokenString,
 	})
+}
+
+func getValidate(c *fiber.Ctx) error {
+
+	tokenString := c.Get("Authorization")
+
+	if tokenString == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se ha enviado el token",
+		})
+	}
+
+	claims := jwt.MapClaims{}
+
+	tkn, _ := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(middleware.JwtKey), nil
+	})
+
+	if claims, ok := tkn.Claims.(jwt.MapClaims); ok && tkn.Valid {
+		return c.Status(200).JSON(fiber.Map{
+			"status": "success",
+			"datos":  claims,
+		})
+	}
+
+	return c.Status(401).JSON(fiber.Map{
+		"status":  "error",
+		"message": "Token invalido",
+	})
+
+}
+
+func getUserGrupos(c *fiber.Ctx) error {
+
+	var user entities.Usuario
+	if err := database.InstanciaDB.Preload("Grupos").Where("username = ?", c.Locals("user")).First(&user).Error; err != nil {
+
+		fmt.Println(err)
+
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no existe",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"data":   user.Grupos,
+	})
+
 }

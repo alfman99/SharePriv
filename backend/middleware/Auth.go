@@ -12,7 +12,8 @@ var JwtKey = []byte("fas8df8as3ll")
 
 func CheckAuth(c *fiber.Ctx) error {
 
-	token := c.Cookies("token")
+	// Get Authorization token from header
+	token := c.Get("Authorization")
 
 	if token == "" {
 		return c.Status(401).JSON(fiber.Map{
@@ -27,13 +28,11 @@ func CheckAuth(c *fiber.Ctx) error {
 		return []byte(JwtKey), nil
 	})
 
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-			return c.Status(401).JSON(fiber.Map{
-				"status":  "error",
-				"message": "Error firma no valida del token",
-			})
-		}
+	if err != nil || tkn == nil {
+		return c.Status(401).JSON(fiber.Map{
+			"status":  "error",
+			"message": err.Error(),
+		})
 	}
 
 	if !tkn.Valid {
