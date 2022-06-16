@@ -30,6 +30,7 @@ const Login: NextPage = () => {
 
   return (
     <Container>
+      <h1>SharePriv</h1>
       <form onSubmit={form.onSubmit((e) => login(e.username, e.password))}>
         <TextInput
           required

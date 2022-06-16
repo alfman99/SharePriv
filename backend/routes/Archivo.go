@@ -121,7 +121,11 @@ func uploadArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(&archivo.Id)
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Archivo creado",
+		"data":    archivo,
+	})
 }
 
 func getArchivoGrupo(c *fiber.Ctx) error {
@@ -226,7 +230,11 @@ func uploadArchivoGrupo(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(&archivo.Id)
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Archivo creado",
+		"data":    archivo,
+	})
 }
 
 func addArchivoGrupo(c *fiber.Ctx) error {

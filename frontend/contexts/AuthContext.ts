@@ -14,7 +14,7 @@ export interface IAuth {
   login: (username: string, password: string) => any,
   logout: () => void,
   signup: (username: string, password: string, invitacion: string) => any,
-  requestAuthenticated: (url: string) => any
+  requestAuthenticated: (url: string, options?: any) => any
 }
 
 export const PerfilVacio: PerfilData = {
@@ -29,5 +29,5 @@ export const AuthContext = createContext<IAuth>({
   login: (username: string, password: string) => {},
   logout: () => {},
   signup: (username: string, password: string, invitacion: string) => {},
-  requestAuthenticated: (url: string) => {}
+  requestAuthenticated: (url: string, options: any) => {}
 });

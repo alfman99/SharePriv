@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }: any) => {
   }, [])
 
   const login = async (username: string, password: string) => {
-    const response = await fetch(`http://localho.st:3000//api/auth/login`, {
+    const response = await fetch(`http://localho.st:3000/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export const AuthContextProvider = ({ children }: any) => {
 
   }
 
-  const requestAuthenticated = async (url: string) => {
+  const requestAuthenticated = async (url: string, options?: any) => {
 
     let token = localStorage.getItem('token')
 
@@ -100,7 +100,8 @@ export const AuthContextProvider = ({ children }: any) => {
     const response = fetch(url, {
       headers: {
         'Authorization': token
-      }
+      },
+      ...options
     })
 
     return response;

@@ -1,23 +1,18 @@
 import type { NextPage } from 'next'
 
 import { Button } from '@mantine/core'
-import { AuthContext } from '../contexts/AuthContext'
-import { useContext } from 'react'
 import Link from 'next/link'
 
 const LoggedOut: NextPage = () => {
-
-  const { logout, user } = useContext(AuthContext)
-
   return (
     <>
       <Link href="/signup">
-        <Button>
+        <Button color={'green'}>
           Signup
         </Button>
       </Link>
       <Link href="/login">
-        <Button>
+        <Button style={{ marginLeft: '0.5em' }}>
           Login
         </Button>
       </Link>
