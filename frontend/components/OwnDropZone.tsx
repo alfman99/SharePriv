@@ -40,7 +40,7 @@ const OwnDropZone = (props: { handleOnDrop: (file: any) => void; handleOnReject:
       onDrop={(file: File[]) => handleOnDrop(file)}
       onReject={(file: any) => handleOnReject(file)}
       maxSize={10000000}
-      accept={IMAGE_MIME_TYPE}
+      accept={['image/*', 'text/*']}
       multiple={false}
       >
       {dropzoneChildren}

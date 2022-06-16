@@ -12,7 +12,8 @@ import (
 
 func SetInvitacionRegistroRoutes(group fiber.Router) {
 	// Create Invitacion Registro
-	group.Post("/crear", createInvitacionRegistro) // ACABADO
+	group.Post("/crear", createInvitacionRegistro)   // ACABADO
+	group.Get("/listar", listarInvitacionesRegistro) // ACABADO
 }
 
 func SetInvitacionGruposRoutes(group fiber.Router) {
@@ -70,6 +71,24 @@ func createInvitacionRegistro(c *fiber.Ctx) error {
 		"status": "success",
 		"data":   invitacion,
 	})
+}
+
+func listarInvitacionesRegistro(c *fiber.Ctx) error {
+
+	var usuario entities.Usuario
+
+	if err := database.InstanciaDB.Preload("InvitacionesRegistroCreadas").Where("username = ?", c.Locals("user").(string)).First(&usuario).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error al obtener el usuario",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status": "success",
+		"data":   usuario.InvitacionesRegistroCreadas,
+	})
+
 }
 
 func createInvitacionGrupo(c *fiber.Ctx) error {

@@ -5,8 +5,9 @@ import { AuthContext } from '../contexts/AuthContext'
 import { useContext } from 'react'
 import Selector, { SelectPageProps } from './SelectPage'
 import Publicos from './LoggedInTabs/Publicos'
-import { Lego, Network } from 'tabler-icons-react'
+import { Lego, Network, PlaylistAdd } from 'tabler-icons-react'
 import Grupos from './LoggedInTabs/Grupos'
+import CrearInvitacionRegistro from './CrearInvitacionRegistro'
 
 const LoggedIn: NextPage = () => {
 
@@ -22,6 +23,11 @@ const LoggedIn: NextPage = () => {
       component: <Grupos />,
       icon: <Lego size={20} />,
       label: 'Grupos'
+    },
+    {
+      component: <CrearInvitacionRegistro />,
+      icon: <PlaylistAdd size={20} />,
+      label: 'Invitaciones Registro'
     },
   ]
 

@@ -46,9 +46,6 @@ const ExploreGroups = (props: { groups: GroupData[]; }) => {
         <Tabs.Tab label={'Archivos'} icon={<Files size={20} />}>
           <DisplayGroupArchivos group={group} />
         </Tabs.Tab>
-        <Tabs.Tab label={'Mis invitaciones'} icon={<Files size={20} />}>
-          <h1>FALTA</h1>
-        </Tabs.Tab>
       </Tabs>
     </>
   )
