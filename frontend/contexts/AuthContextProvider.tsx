@@ -14,7 +14,7 @@ export const AuthContextProvider = ({ children }: any) => {
       return;
     }
 
-    const response = await fetch(`http://localhost:3000/api/auth/validate`, {
+    const response = await fetch(`http://localho.st:3000/api/auth/validate`, {
       headers: {
         'Authorization': token
       }
@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }: any) => {
   }, [])
 
   const login = async (username: string, password: string) => {
-    const response = await fetch(`http://localhost:3000/api/auth/login`, {
+    const response = await fetch(`http://localho.st:3000//api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ export const AuthContextProvider = ({ children }: any) => {
   }
 
   const signup = async (username: string, password: string, invitacion: string) => {
-    const response = await fetch(`http://localhost:3000/api/usuarios`, {
+    const response = await fetch(`http://localho.st:3000/api/usuarios`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -88,12 +88,31 @@ export const AuthContextProvider = ({ children }: any) => {
 
   }
 
+  const requestAuthenticated = async (url: string) => {
+
+    let token = localStorage.getItem('token')
+
+    if (!token) {
+      setUser(PerfilVacio)
+      return;
+    }
+
+    const response = fetch(url, {
+      headers: {
+        'Authorization': token
+      }
+    })
+
+    return response;
+  }
+
   return (
     <AuthContext.Provider value={{
       user,
       login,
       logout,
-      signup
+      signup,
+      requestAuthenticated
     }}>
       {children}
     </AuthContext.Provider>

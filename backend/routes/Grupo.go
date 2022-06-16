@@ -4,6 +4,7 @@ import (
 	"sharepriv/database"
 	"sharepriv/entities"
 	"sharepriv/middleware"
+	"sharepriv/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -17,6 +18,9 @@ func SetGroupRoutes(app fiber.Router) {
 
 	// Unirse a grupo
 	app.Post("/join", middleware.CheckAuth, joinGroup) // ACABADO
+
+	// Get archivos de grupo
+	app.Get("/:id/archivos", middleware.CheckAuth, getArchivosGrupo) // ACABADO
 }
 
 func getGroup(c *fiber.Ctx) error {
@@ -166,4 +170,48 @@ func joinGroup(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "Usuario unido al grupo",
 	})
+}
+
+func getArchivosGrupo(c *fiber.Ctx) error {
+
+	identifier := c.Params("id")
+
+	if len(identifier) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El id del grupo no puede estar vacio",
+		})
+	}
+
+	var usuario entities.Usuario
+	if err := database.InstanciaDB.Preload("Grupos").Where("username = ?", c.Locals("user").(string)).First(&usuario).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no existe",
+		})
+	}
+
+	if !util.ContainsGroup(usuario.Grupos, identifier) {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no pertenece al grupo",
+		})
+	}
+
+	var grupo entities.Grupo
+	if err := database.InstanciaDB.Preload("Archivos").Where("id = ?", identifier).First(&grupo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El grupo no existe",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Archivos del grupo",
+		"data": fiber.Map{
+			"archivos": grupo.Archivos,
+		},
+	})
+
 }

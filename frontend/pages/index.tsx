@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { Button, Container } from '@mantine/core'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext } from 'react'
+import LoggedIn from '../components/LoggedIn'
+import LoggedOut from '../components/LoggedOut'
 
 const Home: NextPage = () => {
 
@@ -12,29 +14,7 @@ const Home: NextPage = () => {
   return (
     <Container>
       <h1>SharePriv</h1>
-      {
-        user.user == "" ? (
-          <>
-            <Link href="/signup">
-              <Button>
-                Signup
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button>
-                Login
-              </Button>
-            </Link>
-          </>
-        ) : (
-          <>
-            <p>Welcome {user.user}</p>
-            <Button onClick={() => logout()}>
-              Logout
-            </Button>
-          </>
-        )
-      }
+      { user.user == "" ? <LoggedOut /> : <LoggedIn />}
     </Container>
   )
 }

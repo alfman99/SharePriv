@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { TextInput, Checkbox, Button, Group, Box, Container, PasswordInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { NextPage } from 'next';
