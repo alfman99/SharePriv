@@ -58,6 +58,15 @@ func getArchivoPublico(c *fiber.Ctx) error {
 		})
 	}
 
+	archivo.Visualizaciones += 1
+
+	if err = database.InstanciaDB.Save(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo actualizar el archivo",
+		})
+	}
+
 	c.Context().SetContentType(archivo.Mime)
 	return c.Status(200).Send(decryptedFile)
 }
@@ -163,6 +172,15 @@ func getArchivoGrupo(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  "error",
 			"message": "El usuario no pertenece a ningun grupo del que se puede ver este archivo",
+		})
+	}
+
+	archivo.Visualizaciones += 1
+
+	if err := database.InstanciaDB.Save(&archivo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "No se pudo actualizar el archivo",
 		})
 	}
 
