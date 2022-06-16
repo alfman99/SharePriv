@@ -20,7 +20,7 @@ const Signup: NextPage = () => {
 
     validate: {
       password: (value) => (value.length < 8 ? 'Password must be at least 8 characters' : null),
-      invitacion: (value) => (value.length < 16 ? 'Invitation code must be at least 16 characters' : null)
+      invitacion: (value) => (value.length < 16 ? 'Invitation code must be 16 characters' : null)
     },
   });
 
@@ -32,6 +32,7 @@ const Signup: NextPage = () => {
 
   return (
     <Container>
+      <h1>SharePriv</h1>
       <form onSubmit={form.onSubmit((e) => signup(e.username, e.password, e.invitacion))}>
         <TextInput
           required

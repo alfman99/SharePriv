@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 const RenderTxt = (props: {
   documento: Blob;
+  rows: number;
 }) => {
+
+  const { rows } = props;
 
   const [text, setText] = useState<string>("");
 
@@ -16,16 +19,12 @@ const RenderTxt = (props: {
   }, [props.documento]);
 
   return (
-    <div style={{
-      paddingTop: '1em',
-      paddingBottom: '1em',
-    }}>
-      <Textarea
-        value={text}
-        autosize
-        readOnly
-      />
-    </div>
+    <Textarea
+      value={text}
+      maxRows={rows}
+      autosize
+      readOnly
+    />
   )
 }
 

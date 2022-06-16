@@ -9,8 +9,16 @@ export interface PerfilData {
   user: string;
 }
 
+export interface GroupData {
+  Id: string;
+  Nombre: string;
+  FechaCreacion: Date;
+  Propietario: string;
+}
+
 export interface IAuth {
   user: PerfilData;
+  groups: GroupData[];
   login: (username: string, password: string) => any,
   logout: () => void,
   signup: (username: string, password: string, invitacion: string) => any,
@@ -24,8 +32,11 @@ export const PerfilVacio: PerfilData = {
   user: ""
 }
 
+export const GruposVacios: GroupData[] = [];
+
 export const AuthContext = createContext<IAuth>({
   user: PerfilVacio,
+  groups: GruposVacios,
   login: (username: string, password: string) => {},
   logout: () => {},
   signup: (username: string, password: string, invitacion: string) => {},

@@ -3,8 +3,9 @@ import RenderText from "./RenderArchivos/RenderText";
 
 const ShowArchivo = (props: {
   documento: Blob | undefined;
+  textRows: number;
 }) => {
-  const { documento } = props
+  const { documento, textRows } = props
 
   const selectRenderer = (documento: Blob) => {
 
@@ -15,7 +16,8 @@ const ShowArchivo = (props: {
       case 'image/bmp':
         return <RenderImage documento={documento} />
       case 'text/plain':
-        return <RenderText documento={documento} />
+      case 'text/plain; charset=utf-8':
+        return <RenderText rows={textRows} documento={documento} />
       default:
         return <h1>Error type not handled: {documento.type}</h1>
     }

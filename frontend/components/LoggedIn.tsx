@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext'
 import { useContext } from 'react'
 import Selector, { SelectPageProps } from './SelectPage'
 import Publicos from './LoggedInTabs/Publicos'
-import { Photo } from 'tabler-icons-react'
+import { Lego, Network } from 'tabler-icons-react'
 import Grupos from './LoggedInTabs/Grupos'
 
 const LoggedIn: NextPage = () => {
@@ -15,12 +15,12 @@ const LoggedIn: NextPage = () => {
   const pages: SelectPageProps[] = [
     {
       component: <Publicos />,
-      icon: <Photo size={14} />,
+      icon: <Network size={20} />,
       label: 'Publicos'
     },
     {
       component: <Grupos />,
-      icon: <Photo size={14} />,
+      icon: <Lego size={20} />,
       label: 'Grupos'
     },
   ]
@@ -29,7 +29,7 @@ const LoggedIn: NextPage = () => {
     <>
       <p>Welcome {user.user}</p>
 
-      <Button onClick={() => logout()}>
+      <Button color={'red'} onClick={() => logout()}>
         Logout
       </Button>
 

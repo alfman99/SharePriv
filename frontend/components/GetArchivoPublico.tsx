@@ -73,7 +73,9 @@ const GetArchivoPublico = () => {
         <Button type={'submit'}>Ver archivo</Button>
 
       </form>
-      <ShowArchivo documento={documento} />
+      <div style={{ marginTop: '1em', height: '15em', width: '100%', position: 'relative' }}>
+        <ShowArchivo textRows={10} documento={documento} />
+      </div>
     </div>
   );
 }

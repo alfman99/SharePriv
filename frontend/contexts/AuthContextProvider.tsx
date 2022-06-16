@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { AuthContext, PerfilData, PerfilVacio } from './AuthContext';
+import { AuthContext, GroupData, GruposVacios, PerfilData, PerfilVacio } from './AuthContext';
 
 export const AuthContextProvider = ({ children }: any) => {
 
   const [user, setUser] = useState<PerfilData>(PerfilVacio);
+  const [groups, setGroups] = useState<GroupData[]>(GruposVacios);
 
   const fetchUserInfo = async () => {
 
@@ -21,13 +22,26 @@ export const AuthContextProvider = ({ children }: any) => {
     });
     if (response.status === 200) {
       const data = await response.json()
-
-      console.log(data)
-
       setUser(data.datos)
     }
     else {
       setUser(PerfilVacio)
+      return;
+    }
+
+
+    const response2 = await fetch(`http://localho.st:3000/api/auth/grupos`, {
+      headers: {
+        'Authorization': token
+      }
+    });
+
+    if (response2.status === 200) {
+      const data = await response2.json()
+      setGroups(data.data)
+    } else {
+      setGroups(GruposVacios)
+      return;
     }
   }
 
@@ -110,6 +124,7 @@ export const AuthContextProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider value={{
       user,
+      groups,
       login,
       logout,
       signup,
