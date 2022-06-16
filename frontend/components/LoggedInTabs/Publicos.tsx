@@ -1,8 +1,8 @@
 import { Button, Container, Space, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
-import ShowArchivo from "./ShowArchivo";
+import { AuthContext } from "../../contexts/AuthContext";
+import ShowArchivo from "../ShowArchivo";
 
 const Publicos = () => {
 

@@ -4,9 +4,9 @@ import { Button, Space } from '@mantine/core'
 import { AuthContext } from '../contexts/AuthContext'
 import { useContext } from 'react'
 import Selector, { SelectPageProps } from './SelectPage'
-import Publicos from './Publicos'
+import Publicos from './LoggedInTabs/Publicos'
 import { Photo } from 'tabler-icons-react'
-import Grupos from './Grupos'
+import Grupos from './LoggedInTabs/Grupos'
 
 const LoggedIn: NextPage = () => {
 

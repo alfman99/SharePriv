@@ -1,8 +1,10 @@
+import { Container } from "@mantine/core"
+
 const Grupos = () => {
   return (
-    <div>
+    <Container>
       <h2>Grupos</h2>
-    </div>
+    </Container>
   )
 }
 
