@@ -1,16 +1,22 @@
 import { Select, Tabs } from "@mantine/core"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Files, InfoCircle } from "tabler-icons-react";
-import { GroupData } from "../contexts/AuthContext"
+import { AuthContext, GroupData } from "../contexts/AuthContext"
+import { Invitacion } from "./CrearInvitacionRegistro";
 import DisplayGroupArchivos from "./DisplayGroupArchivos";
 import DisplayGroupInfo from "./DisplayGroupInfo";
+import DisplayInvitaciones from "./DisplayInvitaciones";
+import InvitacionesGrupo from "./InvitacionesGrupo";
 
 const ExploreGroups = (props: { groups: GroupData[]; }) => {
+
+  const { user, requestAuthenticated } = useContext(AuthContext);
 
   const { groups } = props;
 
   const [group, setGroup] = useState<GroupData>(groups[0])
 
+  
   const mapGroupsToSelect = () => {
     return groups.map(group => {
       return {
@@ -19,7 +25,7 @@ const ExploreGroups = (props: { groups: GroupData[]; }) => {
       }
     })
   }
-  
+    
   const handleChangeGroupSelected = (event: any) => {
     const grupoSelec = groups.find(group => group.Id === event)
     if (!grupoSelec) {
@@ -46,6 +52,13 @@ const ExploreGroups = (props: { groups: GroupData[]; }) => {
         <Tabs.Tab label={'Archivos'} icon={<Files size={20} />}>
           <DisplayGroupArchivos group={group} />
         </Tabs.Tab>
+        {
+          group.Propietario === user.user ? (
+            <Tabs.Tab label={'Invitaciones'} icon={<Files size={20} />}>
+              <InvitacionesGrupo group={group} />
+            </Tabs.Tab>
+          ) : null
+        }
       </Tabs>
     </>
   )

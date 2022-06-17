@@ -1,6 +1,9 @@
-import { Button, Container, Tabs } from "@mantine/core";
-import { GroupData } from "../contexts/AuthContext";
+import { Button, Container, Modal, Text } from "@mantine/core";
+import { useContext, useState } from "react";
+import { AuthContext, GroupData } from "../contexts/AuthContext";
 import { formatDateBonitoDisplay } from "../util/Util";
+import CrearInvitacionRegistro from "./CrearInvitacionRegistro";
+import GenerarInvitacion from "./GenerarInvitacion";
 
 
 const DisplayGroupInfo = (props: { group: GroupData; }) => {
@@ -9,9 +12,9 @@ const DisplayGroupInfo = (props: { group: GroupData; }) => {
 
   return (
     <Container>
-      <h2>Nombre: {group.Nombre}</h2>
-      <h2>Propietario: {group.Propietario}</h2>
-      <h2>Fecha creación: {formatDateBonitoDisplay(group.FechaCreacion)}</h2>
+      <Text><strong>Nombre: </strong>{group.Nombre}</Text>
+      <Text><strong>Propietario: </strong>{group.Propietario}</Text>
+      <Text><strong>Fecha creación: </strong>{formatDateBonitoDisplay(group.FechaCreacion)}</Text>
     </Container>
   )
 }

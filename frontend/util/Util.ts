@@ -1,3 +1,5 @@
+var db = require('mime-db')
+
 export const generateRandomString = (length: number) => {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -48,4 +50,16 @@ export const b64ToBlob = (b64Data: string, contentType: string) => {
   const blob = new Blob([byteArray], { type: contentType });
   return blob;
 
+}
+
+export const descargarArchivo = (blob: Blob, nombre: string) => {
+  const link = document.createElement('a')
+  link.href = window.URL.createObjectURL(blob)
+  link.download = nombre
+  link.click()
+  link.remove();
+}
+
+export const mimeToExtension = (mime: string) => {
+  return db[mime].extensions[0]
 }

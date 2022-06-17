@@ -21,6 +21,9 @@ func SetGroupRoutes(app fiber.Router) {
 
 	// Get archivos de grupo
 	app.Get("/:id/archivos", middleware.CheckAuth, getArchivosGrupo) // ACABADO
+
+	// Get invitaciones al grupo
+	app.Get("/:id/invitaciones", middleware.CheckAuth, getInvitacionesGrupo) // ACABADO
 }
 
 func getGroup(c *fiber.Ctx) error {
@@ -211,6 +214,42 @@ func getArchivosGrupo(c *fiber.Ctx) error {
 		"message": "Archivos del grupo",
 		"data": fiber.Map{
 			"archivos": grupo.Archivos,
+		},
+	})
+
+}
+
+func getInvitacionesGrupo(c *fiber.Ctx) error {
+
+	identifier := c.Params("id")
+
+	if len(identifier) == 0 {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El id del grupo no puede estar vacio",
+		})
+	}
+
+	var grupo entities.Grupo
+	if err := database.InstanciaDB.Preload("InvitacionesGrupo").Where("id = ?", identifier).First(&grupo).Error; err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El grupo no existe",
+		})
+	}
+
+	if grupo.Propietario != c.Locals("user").(string) {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  "error",
+			"message": "El usuario no es el propietario del grupo",
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"status":  "success",
+		"message": "Invitaciones del grupo",
+		"data": fiber.Map{
+			"invitaciones": grupo.InvitacionesGrupo,
 		},
 	})
 

@@ -2,6 +2,7 @@ import { Button, Checkbox, Container, Space, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { descargarArchivo, mimeToExtension } from "../util/Util";
 import ShowArchivo from "./ShowArchivo";
 
 const GetArchivoPublico = () => {
@@ -22,11 +23,7 @@ const GetArchivoPublico = () => {
       const blob = await response.blob()
 
       if (event.download) {
-        const link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = event.id_archivo
-        link.click()
-        link.remove();
+        descargarArchivo(blob, event.id_archivo + '.' + mimeToExtension(blob.type))
       }
 
       setDocumento(blob)
