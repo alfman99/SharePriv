@@ -9,7 +9,7 @@ al código:
 - Tecnología utilizada:
   - Backend:
     - SGBD: PostgreSQL
-    - Lenguaje de programación: Go
+    - Lenguaje de programación: Golang
     - ORM: Gorm (https://gorm.io/index.html)
     - Framework: Fiber (https://github.com/gofiber/fiber)
   - Frontend:
@@ -18,6 +18,12 @@ al código:
     - Framework UI: Mantine UI (https://mantine.dev/)
 
 - Funcionamiento de la app
+
+  - Usuario con muchos grupos: {
+    "username": "paloma99",
+    "password": "ro3M!y5Q$5"
+  }
+
   - Mostrar archivos públicos:
     - imagen: {
       "id": "884c0054432d3c051d85bb1635650296",
@@ -30,12 +36,6 @@ al código:
     - texto: {
       "id": "a867c554015c74bf822c403de3f45646",
       "clave": "EtKXZLGez6MecmVpHaDJFDdp4okUROfA"
-    }
-
-  - Mostrar display de archivos en usuario con varios grupos:
-    - Usuario con muchos grupos: {
-      "username": "paloma99",
-      "password": "ro3M!y5Q$5"
     }
   
   - Crear grupo própio:
