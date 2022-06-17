@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Table } from "@mantine/core";
+import { Button, Group, Modal, Table } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { formatDate } from "../util/Util";
+import { formatDateBonitoDisplay } from "../util/Util";
+import GenerarInvitacion from "./GenerarInvitacion";
 
 
 
@@ -21,21 +22,31 @@ const CrearInvitacionRegistro = () => {
 
   const { requestAuthenticated } = useContext(AuthContext);
 
+  const [openedModal, setOpenedModal] = useState<boolean>(false);
+
+  const fetchInvitaciones = async () => {
+    const response = await requestAuthenticated('http://localho.st:3000/api/invitaciones/registro/listar');
+    const data = await response.json();
+    setListaInvitaciones(data.data);
+  }
+
   useEffect(() => {
-
-    const fetchInvitaciones = async () => {
-      const response = await requestAuthenticated('http://localho.st:3000/api/invitaciones/registro/listar');
-      const data = await response.json();
-      setListaInvitaciones(data.data);
-    }
-
     fetchInvitaciones();
-
-  }, [])
+  }, [openedModal])
 
   return (
     <div>
-      <h1>Invitaciones Registro</h1>
+      <Modal
+        opened={openedModal}
+        onClose={() => setOpenedModal(false)}
+        title="Crear Invitacion Registro"
+        >
+          <GenerarInvitacion closeForm={() => setOpenedModal(false)} />
+      </Modal>
+      <Group style={{ justifyContent: 'space-between' }}>
+        <h1>Invitaciones Registro</h1>
+        <Button onClick={() => setOpenedModal(true)}>Generar Invitación</Button>
+      </Group>
       <Table>
         <thead>
           <tr>
@@ -47,19 +58,28 @@ const CrearInvitacionRegistro = () => {
             <th>Propietario</th>
           </tr>
         </thead>
-        <tbody>
-          {listaInvitaciones.map((invitacion) => (
-            <tr key={invitacion.Codigo}>
-              <td>{invitacion.Codigo}</td>
-              <td>{formatDate(invitacion.FechaCreacion)}</td>
-              <td>{formatDate(invitacion.FechaCaducidad)}</td>
-              <td>{invitacion.MaximoUsos}</td>
-              <td>{invitacion.Usos}</td>
-              <td>{invitacion.Propietario}</td>
-            </tr>
-          ))}
-        </tbody>
+        {
+          <tbody>
+            {listaInvitaciones.map((invitacion) => (
+              <tr key={invitacion.Codigo}>
+                <td>{invitacion.Codigo}</td>
+                <td>{formatDateBonitoDisplay(invitacion.FechaCreacion)}</td>
+                <td>{formatDateBonitoDisplay(invitacion.FechaCaducidad)}</td>
+                <td>{invitacion.MaximoUsos}</td>
+                <td>{invitacion.Usos}</td>
+                <td>{invitacion.Propietario}</td>
+              </tr>
+            ))}
+          </tbody>
+        }
       </Table>
+      {
+        listaInvitaciones.length === 0 ? (
+          <Group style={{ justifyContent: 'center', width: '100%' }}>
+          <p>No tienes ninguna invitación</p>
+        </Group>
+        ) : null
+      }
     </div>
   );
 }

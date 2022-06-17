@@ -19,9 +19,22 @@ export const copiarElementoAlPortapapeles = (valor: string) => {
     });
 }
 
-export const formatDate = (date: Date) => {
+export const formatDateBonitoDisplay = (date: Date) => {
   const d = new Date(date);
   return d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric" })
+}
+
+const padTo2Digits = (num: number) => {
+  return num.toString().padStart(2, '0');
+}
+
+export const formatDateEnviarAPI = (date: Date) => {
+  const d = new Date(date);
+  return [
+    d.getFullYear(),
+    padTo2Digits(d.getMonth() + 1),
+    padTo2Digits(d.getDate()),
+  ].join('-');
 }
 
 export const b64ToBlob = (b64Data: string, contentType: string) => {
