@@ -15,34 +15,51 @@ export const AuthContextProvider = ({ children }: any) => {
       return;
     }
 
-    const response = await fetch(`http://localho.st:3000/api/auth/validate`, {
-      headers: {
-        'Authorization': token
+    try {
+      const response = await fetch(`http://localho.st:3000/api/auth/validate`, {
+        headers: {
+          'Authorization': token
+        }
+      });
+      if (response.status === 200) {
+        const data = await response.json()
+        setUser(data.datos)
       }
-    });
-    if (response.status === 200) {
-      const data = await response.json()
-      setUser(data.datos)
+      else {
+        setUser(PerfilVacio)
+        return;
+      }
     }
-    else {
+    catch (error) {
       setUser(PerfilVacio)
+      alert(error)
+      console.log(error)
       return;
     }
 
 
-    const response2 = await fetch(`http://localho.st:3000/api/auth/grupos`, {
-      headers: {
-        'Authorization': token
+
+    try {
+      const response2 = await fetch(`http://localho.st:3000/api/auth/grupos`, {
+        headers: {
+          'Authorization': token
+        }
+      });
+  
+      if (response2.status === 200) {
+        const data = await response2.json()
+        setGroups(data.data)
+      } else {
+        setGroups(GruposVacios)
+        return;
       }
-    });
-
-    if (response2.status === 200) {
-      const data = await response2.json()
-      setGroups(data.data)
-    } else {
-      setGroups(GruposVacios)
-      return;
     }
+    catch (error) {
+      setGroups(GruposVacios)
+      alert(error)
+      console.log(error)
+    }
+
   }
 
   useEffect(() => {
@@ -50,24 +67,30 @@ export const AuthContextProvider = ({ children }: any) => {
   }, [])
 
   const login = async (username: string, password: string) => {
-    const response = await fetch(`http://localho.st:3000/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        password
+    try {
+      const response = await fetch(`http://localho.st:3000/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
       })
-    })
-    if (response.status === 200) {
-      // store token in local storage
-      const data = await response.json()
-      localStorage.setItem('token', data.token)
-      await fetchUserInfo();
+      if (response.status === 200) {
+        // store token in local storage
+        const data = await response.json()
+        localStorage.setItem('token', data.token)
+        await fetchUserInfo();
+      }
+      else {
+        alert('Usuario o contraseña incorrectos')
+      }
     }
-    else {
-      alert('Usuario o contraseña incorrectos')
+    catch (error) {
+      alert(error)
+      console.log(error)
     }
   }
 
@@ -78,27 +101,34 @@ export const AuthContextProvider = ({ children }: any) => {
   }
 
   const signup = async (username: string, password: string, invitacion: string) => {
-    const response = await fetch(`http://localho.st:3000/api/usuarios`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        invitacion
+    try {
+      const response = await fetch(`http://localho.st:3000/api/usuarios`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          invitacion
+        })
       })
-    })
-
-    const data = await response.json()
-
-    if (response.status === 200) {
-      login(username, password)
-      return;
+  
+      const data = await response.json()
+  
+      if (response.status === 200) {
+        login(username, password)
+        return;
+      }
+      else {
+        alert(data.message)
+      }
     }
-    else {
-      alert(data.message)
+    catch (error) {
+      alert(error)
+      console.log(error)
     }
+
 
   }
 
@@ -111,14 +141,21 @@ export const AuthContextProvider = ({ children }: any) => {
       return;
     }
 
-    const response = fetch(url, {
-      headers: {
-        'Authorization': token
-      },
-      ...options
-    })
+    try {
+      const response = fetch(url, {
+        headers: {
+          'Authorization': token
+        },
+        ...options
+      })
+  
+      return response;
+    }
+    catch (error) {
+      alert(error)
+      console.log(error)
+    }
 
-    return response;
   }
 
   return (
