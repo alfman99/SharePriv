@@ -37,8 +37,6 @@ export const AuthContextProvider = ({ children }: any) => {
       return;
     }
 
-
-
     try {
       const response2 = await fetch(`http://localho.st:3000/api/auth/grupos`, {
         headers: {
@@ -162,6 +160,7 @@ export const AuthContextProvider = ({ children }: any) => {
     <AuthContext.Provider value={{
       user,
       groups,
+      fetchUserInfo,
       login,
       logout,
       signup,

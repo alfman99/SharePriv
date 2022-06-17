@@ -19,7 +19,7 @@ const ShowArchivo = (props: {
       case 'text/plain; charset=utf-8':
         return <RenderText rows={textRows} documento={documento} />
       default:
-        return <h1>Error type not handled: {documento.type}</h1>
+        return null
     }
 }
 
