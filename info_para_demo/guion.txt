@@ -1,0 +1,47 @@
+
+Link del proyecto completo, en caso de que se quiera echar un ojo
+al código: 
+  https://github.com/alfman99/SharePriv/
+
+- Mostrar UML actualizado
+  - Explicacion de que parte he implementado en la web
+
+- Tecnología utilizada:
+  - Backend:
+    - SGBD: PostgreSQL
+    - Lenguaje de programación: Go
+    - ORM: Gorm (https://gorm.io/index.html)
+    - Framework: Fiber (https://github.com/gofiber/fiber)
+  - Frontend:
+    - Lenguaje de programación: Typescript
+    - Framework: NextJS (https://nextjs.org/)
+    - Framework UI: Mantine UI (https://mantine.dev/)
+
+- Funcionamiento de la app
+  - Mostrar archivos públicos:
+    - imagen: {
+      "id": "884c0054432d3c051d85bb1635650296",
+      "clave": "VwOfZlmJ91yiS6JZ4KnAPrFWrUg4X2lZ"
+    }
+    - application/octet-stream (unhandled): {
+      "id": "99b79be07fcbec7ed32141b3f77e23cf",
+      "clave": "xil2VvAqldDZaBkzXGCXKeA5h8WXF3Tg"
+    }
+    - texto: {
+      "id": "a867c554015c74bf822c403de3f45646",
+      "clave": "EtKXZLGez6MecmVpHaDJFDdp4okUROfA"
+    }
+
+  - Mostrar display de archivos en usuario con varios grupos:
+    - Usuario con muchos grupos: {
+      "username": "paloma99",
+      "password": "ro3M!y5Q$5"
+    }
+  
+  - Crear grupo própio:
+    - Crear invitacion al grupo
+    - Subir imagen
+    - Cambiar de usuario y registrar a alfman99
+    - Ver las imagenes
+
+- 50 lineas mas interesantes según yo :)
