@@ -1,0 +1,4 @@
+requests==2.27.1
+randimage==1.2
+faker==13.14.0
+matplotlib==3.5.2
